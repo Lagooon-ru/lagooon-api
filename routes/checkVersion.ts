@@ -1,16 +1,14 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response } from 'express';
+import { versions } from '../modules/versions';
 
 const router = express.Router();
 
-router.post("/checkversion", async (req: Request, api: Response) => {
+router.post('/checkversion', async (req: Request, api: Response) => {
   try {
     const { version } = req.body;
 
     api.send({
-      isAllowed: true,
-      isActual: false,
-      title: "Доступна новая версия",
-      description: "Бла-бла-бла",
+      ...versions[version],
       success: true,
     });
   } catch (err) {
