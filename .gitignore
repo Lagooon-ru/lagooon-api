@@ -27,3 +27,6 @@ yarn-debug.log*
 yarn-error.log*
 cast.js
 .vercel
+
+# Local Netlify folder
+.netlify
