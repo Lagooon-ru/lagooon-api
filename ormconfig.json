@@ -1,10 +1,10 @@
 {
   "type": "postgres",
-  "host": "127.0.0.1",
+  "host": "109.120.183.177",
   "port": 5432,
-  "username": "postgres",
-  "password": "root",
-  "database": "rBackend",
+  "username": "nicholi",
+  "password": "B50Av9c1.d0f73te",
+  "database": "Lagooon-App",
   "entities": [
     "**/*.entity{.ts,.js}"
   ],

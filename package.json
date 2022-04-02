@@ -21,8 +21,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "pretypeorm": "ts-node -r tsconfig-paths/register src/helper/typeorm.helper.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "typeorm:migration:generate": "npm run typeorm -- migration:generate -n",
-    "typeorm:migration:run": "npm run typeorm -- migration:run"
+    "migration:generate": "npm run typeorm -- migration:generate -n",
+    "migrate": "npm run typeorm -- migration:run",
+    "migrate:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -56,6 +57,7 @@
     "@types/joi": "^17.2.3",
     "@types/node": "^16.0.0",
     "@types/passport-jwt": "^3.0.6",
+    "@types/passport-local": "^1.0.34",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
