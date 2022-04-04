@@ -4,7 +4,7 @@
   "port": 5432,
   "username": "postgres",
   "password": "root",
-  "database": "rBackend",
+  "database": "Lagooon",
   "entities": [
     "**/*.entity{.ts,.js}"
   ],
