@@ -22,6 +22,16 @@ class ConfigService {
     return this.getValue('PORT', true);
   }
 
+  public getFirebase() {
+    return {
+      projectId: configService.getValue('FIREBASE_PROJECT_ID', false),
+      privateKey: configService
+        .getValue('FIREBASE_PRIVATE_KEY', false)
+        .replace(/\\n/g, '\n'),
+      clientEmail: configService.getValue('FIREBASE_CLIENT_EMAIL', false),
+    };
+  }
+
   public isProduction() {
     const mode = this.getValue('MODE', false);
     return mode != 'DEV';
