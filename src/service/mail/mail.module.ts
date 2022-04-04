@@ -2,8 +2,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
-import 'dotenv/config';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import 'dotenv/config';
 
 @Module({
   imports: [
