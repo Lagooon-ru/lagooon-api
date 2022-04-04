@@ -35,4 +35,8 @@ export class UserService {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async updateUserService(id: string, data: any) {
+    return this.userRepository.update(id, data);
+  }
 }
