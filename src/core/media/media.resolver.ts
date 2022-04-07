@@ -1,4 +1,7 @@
 import { Resolver } from '@nestjs/graphql';
+import { MediaService } from './media.service';
 
 @Resolver()
-export class MediaResolver {}
+export class MediaResolver {
+  constructor(private mediaService: MediaService) {}
+}

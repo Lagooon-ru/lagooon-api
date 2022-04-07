@@ -1,27 +1,28 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
   ) {}
 
-  async getUsersService(): Promise<User[]> {
+  async getUsersService(): Promise<UserEntity[]> {
     return this.userRepository.find();
   }
 
-  async getProfileService(id: string): Promise<User> {
+  async getProfileService(id: string): Promise<UserEntity> {
     return this.userRepository.findOne(id);
   }
 
-  async getUserByAttrService(attr: any): Promise<User> {
+  async getUserByAttrService(attr: any): Promise<UserEntity> {
     return this.userRepository.findOne({ ...attr });
   }
 
-  async createUserService(user: any): Promise<User> {
+  async createUserService(user: any): Promise<UserEntity> {
     const { name, email, password } = user;
     console.log(password);
     try {

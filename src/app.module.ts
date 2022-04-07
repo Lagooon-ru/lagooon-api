@@ -11,6 +11,8 @@ import { Connection } from 'typeorm';
 import 'dotenv/config';
 import { join } from 'path';
 import { MediaModule } from './core/media/media.module';
+import { PostModule } from './core/post/post.module';
+import { StoryModule } from './core/story/story.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { MediaModule } from './core/media/media.module';
     MailModule,
     FirebaseModule,
     MediaModule,
+    PostModule,
+    StoryModule,
   ],
   controllers: [AppController],
 })

@@ -4,7 +4,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 @Entity({ name: 'user' })
-class User extends BaseEntity {
+class UserEntity extends BaseEntity {
   @Field()
   @Column({ type: 'varchar', length: 255, nullable: false })
   name: string;
@@ -13,7 +13,6 @@ class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
   email: string;
 
-  @Field()
   @Column({ type: 'varchar', length: 255, nullable: false })
   password: string;
 
@@ -30,4 +29,4 @@ class User extends BaseEntity {
   rToken: string;
 }
 
-export { User };
+export { UserEntity };

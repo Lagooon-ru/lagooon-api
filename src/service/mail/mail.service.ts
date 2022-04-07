@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { User } from '../../core/user/user.entity';
+import { UserEntity } from '../../core/user/user.entity';
 
 @Injectable()
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserConfirmationMail(user: User, token: string) {
+  async sendUserConfirmationMail(user: UserEntity, token: string) {
     const url = `${process.env.FRONTEND_URL}/confirm/email/${token}`;
     return await this.mailerService.sendMail({
       from: `"locallolo" <${process.env.MAIL_FROM}>`,
@@ -21,7 +21,7 @@ export class MailService {
     });
   }
 
-  async sendForgetPasswordMail(user: User, token: string) {
+  async sendForgetPasswordMail(user: UserEntity, token: string) {
     const url = `${process.env.FRONTEND_URL}/confirm/password/${token}`;
     return await this.mailerService.sendMail({
       from: `"locallolo" <${process.env.MAIL_FROM}>`,

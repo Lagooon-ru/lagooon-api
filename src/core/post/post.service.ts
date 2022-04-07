@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MediaEntity } from './media.entity';
+import { PostEntity } from './post.entity';
 
 @Injectable()
-export class MediaService {
+export class PostService {
   constructor(
-    @InjectRepository(MediaEntity)
-    private postRepository: Repository<MediaEntity>,
+    @InjectRepository(PostEntity)
+    private postRepository: Repository<PostEntity>,
   ) {}
 }

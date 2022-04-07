@@ -1,30 +1,35 @@
-import { Entity, Column, OneToOne } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
+import { Entity, Column, OneToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../helper/base.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { MediaEntity } from '../media/media.entity';
+import { UserEntity } from '../user/user.entity';
 
 @ObjectType()
-@Entity({ name: 'files' })
-class MediaEntity extends BaseEntity {
+@Entity({ name: 'story' })
+class StoryEntity extends BaseEntity {
   @Field()
   @OneToOne(() => UserEntity)
   author: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
-  name: string;
+  title: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
-  path: string;
+  description: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
   type: string;
+
+  @Field((type) => [MediaEntity])
+  @OneToMany((type) => MediaEntity, (photo) => photo.id)
+  photos: MediaEntity[];
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
   size: string;
 }
 
-export { MediaEntity };
+export { StoryEntity };
