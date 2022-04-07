@@ -8,18 +8,20 @@ import { AuthModule } from './api/auth/auth.module';
 import { MailModule } from './service/mail/mail.module';
 import { FirebaseModule } from './service/firebase/firebase.module';
 import { Connection } from 'typeorm';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import 'dotenv/config';
+import { join } from 'path';
+import { MediaModule } from './core/media/media.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'root',
-        database: 'Lagooon',
+        host: process.env.POSTGRES_HOST,
+        port: parseInt(process.env.POSTGRES_PORT || '0'),
+        username: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DATABASE,
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
         autoLoadEntities: true,
@@ -27,13 +29,13 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
     UserModule,
     AuthModule,
     MailModule,
     FirebaseModule,
+    MediaModule,
   ],
   controllers: [AppController],
 })

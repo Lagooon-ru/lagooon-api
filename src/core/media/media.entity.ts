@@ -1,6 +1,6 @@
 import { Entity, Column, OneToOne } from 'typeorm';
-import { BaseEntity } from './base.entity';
-import { User } from './user.entity';
+import { User } from '../user/user.entity';
+import { BaseEntity } from '../../helper/base.entity';
 
 @Entity({ name: 'files' })
 class Asset extends BaseEntity {

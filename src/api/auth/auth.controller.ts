@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { RealIP } from 'nestjs-real-ip';
 import { RegisterDto } from './types/register.type';
 import { AuthService } from './auth.service';
-import { User } from '../../model/user.entity';
+import { User } from '../../core/user/user.entity';
 import { LocalAuthGuard } from './guards/local.guard';
 import { TLogin } from './types/login.type';
 import { JwtAuthGuard } from './guards/jwt.guard';

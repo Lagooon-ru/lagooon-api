@@ -1,0 +1,26 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  email: String!
+  password: String!
+  isVerified: Boolean!
+  vToken: String!
+  rToken: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  users: [User!]!
+}

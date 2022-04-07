@@ -5,7 +5,7 @@ import {
   encryptString,
 } from '../../helper/bcrypt/bcrypt.helper';
 import { UserService } from '../../core/user/user.service';
-import { User } from '../../model/user.entity';
+import { User } from '../../core/user/user.entity';
 import { RegisterDto } from './types/register.type';
 import { TLogin } from './types/login.type';
 import { MailService } from '../../service/mail/mail.service';
