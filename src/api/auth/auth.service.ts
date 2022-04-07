@@ -6,8 +6,7 @@ import {
 } from '../../helper/bcrypt/bcrypt.helper';
 import { UserService } from '../../core/user/user.service';
 import { UserEntity } from '../../core/user/user.entity';
-import { RegisterDto } from './types/register.type';
-import { TLogin } from './types/login.type';
+import { LoginDto, TLogin } from './types/login.type';
 import { MailService } from '../../service/mail/mail.service';
 import { createToken } from '../../helper/token.helper';
 
@@ -19,9 +18,12 @@ export class AuthService {
     private readonly mailService: MailService,
   ) {}
 
+  async getProfile(id: string): Promise<UserEntity> {
+    return this.userService.getUserByAttrService({ id: id });
+  }
+
   //Signup Service
-  async signupService(dat: RegisterDto): Promise<TLogin> {
-    console.log(dat);
+  async signupService(dat: any): Promise<TLogin> {
     const pwd = encryptString(dat.password);
     const token = createToken();
 
@@ -30,7 +32,14 @@ export class AuthService {
       password: pwd,
       vToken: token,
     });
-    await this.mailService.sendUserConfirmationMail(user, token);
+
+    try {
+      await this.mailService.sendUserConfirmationMail(user, token);
+    } catch (e) {
+      console.log(e);
+      throw new HttpException('Email send failed', 409);
+    }
+
     return this.loginService(user);
   }
 
@@ -81,12 +90,18 @@ export class AuthService {
   }
 
   //initial validation for the local passport
-  async validate(email: string, password: string): Promise<any> {
-    const user = await this.userService.getUserByAttrService({ email: email });
+  async validate(dat: LoginDto): Promise<any> {
+    const user = await this.userService.getUserByAttrService({
+      email: dat.email,
+    });
     if (!user) {
       return null;
     }
-    const passwordIsValid = decryptString(password, user.password);
+    const passwordIsValid = decryptString(dat.password, user.password);
     return passwordIsValid ? user : null;
+  }
+
+  async validateUserService(arg: any): Promise<UserEntity | null> {
+    return await this.userService.getUserByAttrService({ ...arg });
   }
 }

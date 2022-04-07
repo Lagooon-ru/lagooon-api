@@ -1,9 +1,9 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import 'dotenv/config';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -11,8 +11,9 @@ import 'dotenv/config';
       transport: {
         host: process.env.SMTP_HOST || '',
         port: parseInt(process.env.SMTP_PORT || ''),
+        secure: true,
         auth: {
-          user: process.env.SMTP_HOST || '',
+          user: process.env.SMTP_USER || '',
           pass: process.env.SMTP_PASS || '',
         },
       },
@@ -21,7 +22,7 @@ import 'dotenv/config';
       },
       template: {
         dir: join(__dirname, 'templates'),
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+        adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
         },
