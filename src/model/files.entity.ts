@@ -3,7 +3,7 @@ import { BaseEntity } from './base.entity';
 import { User } from './user.entity';
 
 @Entity({ name: 'files' })
-export class Asset extends BaseEntity {
+class Asset extends BaseEntity {
   @OneToOne(() => User)
   author: string;
 
@@ -19,3 +19,5 @@ export class Asset extends BaseEntity {
   @Column({ type: 'varchar', length: 255 })
   size: string;
 }
+
+export { Asset };
