@@ -9,11 +9,11 @@ export class MailService {
   async sendUserConfirmationMail(user: UserEntity, token: string) {
     const url = `${process.env.FRONTEND_URL}/confirm/email/${token}`;
     return await this.mailerService.sendMail({
-      from: `"locallolo" <${process.env.MAIL_FROM}>`,
+      from: `"lagooon" <${process.env.MAIL_FROM}>`,
       to: user.email,
       subject:
         'подтверждение адреса электронной почты для входа в приложение Lagooon.',
-      template: './confirmation',
+      template: 'confirmation',
       context: {
         name: user.name,
         url,
@@ -24,7 +24,7 @@ export class MailService {
   async sendForgetPasswordMail(user: UserEntity, token: string) {
     const url = `${process.env.FRONTEND_URL}/confirm/password/${token}`;
     return await this.mailerService.sendMail({
-      from: `"locallolo" <${process.env.MAIL_FROM}>`,
+      from: `"lagooon" <${process.env.MAIL_FROM}>`,
       to: user.email,
       subject: 'Сброс пароля для приложения Lagooon',
       template: './forgetpass',

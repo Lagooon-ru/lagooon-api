@@ -24,7 +24,7 @@ export class UserService {
 
   async createUserService(user: any): Promise<UserEntity> {
     const { name, email, password } = user;
-    console.log(password);
+
     try {
       const newUser = await this.userRepository.create();
       newUser.name = name;
