@@ -5,7 +5,7 @@ import {
   encryptString,
 } from '../../helper/bcrypt/bcrypt.helper';
 import { UserService } from '../../core/user/user.service';
-import { User } from '../../model/user.entity';
+import { UserEntity } from '../../core/user/user.entity';
 import { RegisterDto } from './types/register.type';
 import { TLogin } from './types/login.type';
 import { MailService } from '../../service/mail/mail.service';
@@ -25,7 +25,7 @@ export class AuthService {
     const pwd = encryptString(dat.password);
     const token = createToken();
 
-    const user: User = await this.userService.createUserService({
+    const user: UserEntity = await this.userService.createUserService({
       ...dat,
       password: pwd,
       vToken: token,
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   //Login Service
-  async loginService(user: User): Promise<TLogin> {
+  async loginService(user: UserEntity): Promise<TLogin> {
     const payload = {
       email: user.email,
       sub: user.password,
@@ -64,7 +64,7 @@ export class AuthService {
   }
 
   //Reset Password with new password service
-  async resetPasswordService(user: User, password: string) {
+  async resetPasswordService(user: UserEntity, password: string) {
     const pwd = encryptString(password);
     return this.userService.updateUserService(user.id, { password: pwd });
   }

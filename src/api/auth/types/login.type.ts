@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { User } from '../../../model/user.entity';
+import { UserEntity } from '../../../core/user/user.entity';
 
 export class LoginDto {
   @IsNotEmpty()
@@ -12,6 +12,6 @@ export class LoginDto {
 }
 
 export type TLogin = {
-  user: User;
+  user: UserEntity;
   access_token: string;
 };
