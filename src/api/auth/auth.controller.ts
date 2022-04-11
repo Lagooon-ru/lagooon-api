@@ -1,38 +1,40 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { RealIP } from 'nestjs-real-ip';
-import { RegisterDto } from './types/register.type';
+import {
+  Controller,
+  Param,
+  Get,
+  Render,
+  Post,
+  Body,
+  HttpException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { TLogin } from './types/login.type';
-import { JwtAuthGuard } from './guards/jwt.guard';
-import { ResetPassDto } from './types/reset.type';
-import { VerifyDto } from './types/verify.type';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
-  async register(
-    @Body() register: RegisterDto,
-    @RealIP() ip: string,
-  ): Promise<TLogin> {
-    console.log(ip);
-    return this.authService.signupService(register);
+  @Get('/reset-pass/:token')
+  @Render('pages/reset-pass')
+  async resetPassword(@Param('token') token: any) {
+    return this.authService.resetViewService(token);
   }
 
-  @Post('/forget-password')
-  async forgotEmail(@Body() body: any) {
-    return this.authService.forgetPasswordService({ email: body.email });
+  @Get('/email/:token')
+  @Render('pages/email-confirm')
+  async emailConfirmAction(@Param('token') token: any) {
+    return this.authService.emailConfirmService(token);
   }
 
-  @Post('/verify-token')
-  async verifyToken(@Body() body: VerifyDto) {
-    return this.authService.validateTokenService(body.vToken);
-  }
+  @Post('/reset-pass')
+  async resetPasswordAction(@Body() body: any) {
+    const user = await this.authService.validateUserService({
+      vToken: body.token,
+    });
 
-  @Post('/reset-password')
-  @UseGuards(JwtAuthGuard)
-  async resetPassword(@Req() req: any, @Body() body: ResetPassDto) {
-    return this.authService.resetPasswordService(req.user, body.password);
+    if (!user) {
+      throw new HttpException('invalid token!', 401);
+    }
+
+    return this.authService.resetPasswordService(user, body.password);
   }
 }

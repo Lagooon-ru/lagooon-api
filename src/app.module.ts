@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UserModule } from './core/user/user.module';
-import { AppController } from './app.controller';
 import { AuthModule } from './api/auth/auth.module';
 import { MailModule } from './service/mail/mail.module';
 import { FirebaseModule } from './service/firebase/firebase.module';
@@ -13,6 +12,8 @@ import { join } from 'path';
 import { MediaModule } from './core/media/media.module';
 import { PostModule } from './core/post/post.module';
 import { StoryModule } from './core/story/story.module';
+import { AppController } from './app.controller';
+import { ChatModule } from './core/chat/chat.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { StoryModule } from './core/story/story.module';
     MediaModule,
     PostModule,
     StoryModule,
+    ChatModule,
   ],
   controllers: [AppController],
 })

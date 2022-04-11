@@ -2,7 +2,15 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "assets": ["service/mail/templates/**/*"],
+    "webpack": false,
+    "assets": [
+      "service/mail/templates/**/*",
+      "views/**/*",
+      "public/**/*"
+    ],
     "watchAssets": true
+  },
+  "generateOptions": {
+    "spec": false
   }
 }

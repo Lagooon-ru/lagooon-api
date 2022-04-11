@@ -1,0 +1,57 @@
+{{#> simple}}
+  {{#*inline "content"}}
+    {{#if valid}}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-lg-6 mt-200">
+            <form id="reset-password-form">
+              <h3>Hi, {{user.name}}</h3>
+              <p>Please take care of your password carefully!!!!</p>
+              <div class="form-group">
+                <label for="password">New Password</label>
+                <input
+                  name="password"
+                  type="password"
+                  class="form-control"
+                  id="password"
+                >
+              </div>
+              <div class="form-group">
+                <label for="password-confirm">Password Conform</label>
+                <input
+                  name="password-confirm"
+                  type="password"
+                  class="form-control"
+                  id="password-confirm"
+                >
+              </div>
+              <input type="hidden" name="token" id="token" value="{{token}}">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <div class="jumbotron" id="reset-password-success" style="display: none">
+              <h1 class="display-4">Successfully Updated!</h1>
+              <p class="lead">Your password updated successfully. Please try to log in with your new password.</p>
+              <hr class="my-4">
+              <p>If the new password is not working, please try to contact with the support team with below link</p>
+              <a class="btn btn-primary btn-lg" href="/" role="button">Get Support</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {{else}}
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-lg-6 mt-200">
+            <div class="jumbotron">
+              <h1 class="display-4">Invalid Token!</h1>
+              <p class="lead">This token is invalid or expired. Please try again with your correct url.</p>
+              <hr class="my-4">
+              <p>If you are going to learn more about it, please try to look for this link</p>
+              <a class="btn btn-primary btn-lg" href="/" role="button">Learn more</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  {{/inline}}
+{{/simple}}

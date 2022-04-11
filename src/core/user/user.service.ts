@@ -38,6 +38,23 @@ export class UserService {
   }
 
   async updateUserService(id: string, data: any) {
-    return this.userRepository.update(id, data);
+    const user = await this.userRepository.findOne(id);
+
+    if (!!data.email) {
+      data.emailConfirmed = false;
+    }
+
+    return this.userRepository
+      .save({
+        ...user,
+        ...data,
+      })
+      .then((res) => {
+        return { ...res, password: undefined };
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new HttpException(err, 500);
+      });
   }
 }
