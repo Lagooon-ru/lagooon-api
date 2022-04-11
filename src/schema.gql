@@ -26,10 +26,21 @@ type ChatEntity {
   isArchived: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  type: String!
   title: String!
   description: String!
   members: [UserEntity!]!
-  content: [String!]!
+  content: [MessageEntity!]!
+}
+
+type MessageEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  sender: UserEntity!
+  message: String!
 }
 
 type UserEntity {
@@ -45,9 +56,9 @@ type UserEntity {
   phoneConfirmed: Boolean!
   isVerified: Boolean!
   medias: [MediaEntity!]!
+  chats: [ChatEntity!]
   vToken: String!
   rToken: String!
-  chats: [ChatEntity!]!
 }
 
 type TLogin {
@@ -79,7 +90,7 @@ type Query {
   profile: UserEntity!
   stories: [StoryEntity!]!
   story: StoryEntity!
-  chats: ChatEntity!
+  chats: [ChatEntity!]!
 }
 
 type Mutation {
@@ -88,6 +99,7 @@ type Mutation {
   login(arg: LoginDto!): TLogin!
   forget(email: String!): TForget!
   resetPassword(arg: ResetPassDto!): UserEntity!
+  createChat(arg: CreateChatDto!): ChatEntity!
 }
 
 input RegisterDto {
@@ -104,4 +116,11 @@ input LoginDto {
 input ResetPassDto {
   token: String!
   password: String!
+}
+
+input CreateChatDto {
+  type: String!
+  members: [ID!]!
+  title: String!
+  description: String!
 }

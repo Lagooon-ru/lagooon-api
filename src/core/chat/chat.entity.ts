@@ -1,11 +1,20 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, ManyToMany, OneToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../helper/base.entity';
 import { UserEntity } from '../user/user.entity';
+
+export enum ChatFormat {
+  DIRECT = 'direct',
+  GROUP = 'group',
+}
 
 @ObjectType()
 @Entity({ name: 'chat' })
 class ChatEntity extends BaseEntity {
+  @Field()
+  @Column({ type: 'enum', enum: ChatFormat, default: ChatFormat.DIRECT })
+  type: ChatFormat;
+
   @Field()
   @Column({ type: 'varchar', length: '255', nullable: false })
   title: string;
@@ -16,12 +25,24 @@ class ChatEntity extends BaseEntity {
 
   @Field(() => [UserEntity])
   @ManyToMany(() => UserEntity, (member) => member.chats)
-  @JoinColumn()
+  @JoinTable()
   members: UserEntity[];
 
-  @Field(() => [String])
+  @Field(() => [MessageEntity])
   @Column('jsonb', { nullable: true })
-  content: object[];
+  content: MessageEntity[];
+}
+
+@ObjectType()
+@Entity({ name: 'chat' })
+class MessageEntity extends BaseEntity {
+  @Field(() => UserEntity)
+  @OneToMany(() => UserEntity, (member) => member.id)
+  @JoinTable()
+  sender: UserEntity;
+
+  @Field()
+  message: string;
 }
 
 export { ChatEntity };
