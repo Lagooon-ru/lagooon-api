@@ -80,7 +80,7 @@ type Query {
   profile: UserEntity!
   stories: [StoryEntity!]!
   story: StoryEntity!
-  chats: ChatEntity!
+  chats: [ChatEntity!]!
 }
 
 type Mutation {

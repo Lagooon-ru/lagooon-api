@@ -10,7 +10,7 @@ import { CreateChatDto } from './types/create.type';
 export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
-  @Query(() => ChatEntity)
+  @Query(() => [ChatEntity])
   @UseGuards(GqlAuthGuard)
   async chats(@CurrentUser() user: UserEntity) {
     return this.chatService.getChatsService(user);

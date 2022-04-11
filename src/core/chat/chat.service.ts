@@ -15,7 +15,7 @@ export class ChatService {
   ) {}
 
   async getChatsService(user: UserEntity): Promise<ChatEntity[]> {
-    return await this.chatRepository.find({ relations: ['user'] });
+    return await this.chatRepository.find();
   }
 
   async createChatService(
