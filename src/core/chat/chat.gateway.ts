@@ -20,13 +20,11 @@ export class ChatGateway {
 
   @SubscribeMessage('connected')
   handleConnect(client: any): void {
-    console.log('=============  CONNECTED  =============');
     console.log(client);
   }
 
   @SubscribeMessage('disconnect')
   handleDisconnect(client: any): void {
-    console.log('===========  DISCONNECTED  ===========');
     console.log(client);
   }
 

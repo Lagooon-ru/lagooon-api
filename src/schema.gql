@@ -30,7 +30,17 @@ type ChatEntity {
   title: String!
   description: String!
   members: [UserEntity!]!
-  content: [String!]!
+  content: [MessageEntity!]!
+}
+
+type MessageEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  sender: UserEntity!
+  message: String!
 }
 
 type UserEntity {

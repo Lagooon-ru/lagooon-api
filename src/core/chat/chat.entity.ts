@@ -1,13 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../helper/base.entity';
 import { UserEntity } from '../user/user.entity';
 
@@ -36,9 +28,21 @@ class ChatEntity extends BaseEntity {
   @JoinTable()
   members: UserEntity[];
 
-  @Field(() => [String])
+  @Field(() => [MessageEntity])
   @Column('jsonb', { nullable: true })
-  content: object[];
+  content: MessageEntity[];
+}
+
+@ObjectType()
+@Entity({ name: 'chat' })
+class MessageEntity extends BaseEntity {
+  @Field(() => UserEntity)
+  @OneToMany(() => UserEntity, (member) => member.id)
+  @JoinTable()
+  sender: UserEntity;
+
+  @Field()
+  message: string;
 }
 
 export { ChatEntity };
