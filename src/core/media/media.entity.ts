@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne } from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import { BaseEntity } from '../../helper/base.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
@@ -6,9 +6,9 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 @Entity({ name: 'files' })
 class MediaEntity extends BaseEntity {
-  @Field()
-  @OneToOne(() => UserEntity)
-  author: string;
+  @Field(() => UserEntity)
+  @ManyToOne(() => UserEntity, (user) => user.medias)
+  author: UserEntity;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })

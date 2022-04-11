@@ -23,3 +23,9 @@ export class TLogin {
   @Field()
   access_token: string;
 }
+
+@ObjectType()
+export class TForget {
+  @Field()
+  status: string;
+}

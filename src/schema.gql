@@ -2,6 +2,36 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type MediaEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: UserEntity!
+  name: String!
+  path: String!
+  type: String!
+  size: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type ChatEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  description: String!
+  members: [UserEntity!]!
+  content: [String!]!
+}
+
 type UserEntity {
   id: String!
   isActive: Boolean!
@@ -10,32 +40,23 @@ type UserEntity {
   updatedAt: DateTime!
   name: String!
   email: String!
+  emailConfirmed: Boolean!
+  phone: String!
+  phoneConfirmed: Boolean!
   isVerified: Boolean!
+  medias: [MediaEntity!]!
   vToken: String!
   rToken: String!
+  chats: [ChatEntity!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type TLogin {
   user: UserEntity!
   access_token: String!
 }
 
-type MediaEntity {
-  id: String!
-  isActive: Boolean!
-  isArchived: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  author: String!
-  name: String!
-  path: String!
-  type: String!
-  size: String!
+type TForget {
+  status: String!
 }
 
 type StoryEntity {
@@ -58,11 +79,15 @@ type Query {
   profile: UserEntity!
   stories: [StoryEntity!]!
   story: StoryEntity!
+  chats: ChatEntity!
 }
 
 type Mutation {
   signup(arg: RegisterDto!): TLogin!
+  emailConfirm(email: String!): TForget!
   login(arg: LoginDto!): TLogin!
+  forget(email: String!): TForget!
+  resetPassword(arg: ResetPassDto!): UserEntity!
 }
 
 input RegisterDto {
@@ -73,5 +98,10 @@ input RegisterDto {
 
 input LoginDto {
   email: String!
+  password: String!
+}
+
+input ResetPassDto {
+  token: String!
   password: String!
 }

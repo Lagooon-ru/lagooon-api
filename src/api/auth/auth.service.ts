@@ -43,6 +43,33 @@ export class AuthService {
     return this.loginService(user);
   }
 
+  async emailConfirmEmailService(user: UserEntity): Promise<any> {
+    const newToken = createToken();
+    await this.userService.updateUserService(user.id, { vToken: newToken });
+    return this.mailService
+      .sendUserConfirmationMail(user, newToken)
+      .then(() => {
+        return { status: 'true' };
+      })
+      .catch((e) => {
+        console.log(e);
+        return { status: 'false' };
+      });
+  }
+
+  async emailConfirmService(token: string): Promise<boolean> {
+    const user = await this.userService.getUserByAttrService({ vToken: token });
+    if (!user) {
+      return false;
+    }
+
+    const newToken = createToken();
+    return this.userService.updateUserService(user.id, {
+      vToken: newToken,
+      emailConfirmed: true,
+    });
+  }
+
   //Login Service
   async loginService(user: UserEntity): Promise<TLogin> {
     const payload = {
@@ -60,8 +87,7 @@ export class AuthService {
   }
 
   //Forget password Email service
-  async forgetPasswordService({ email }: { email: string }): Promise<boolean> {
-    const user = await this.userService.getUserByAttrService({ email: email });
+  async forgetPasswordService(user: UserEntity): Promise<any> {
     const token: string = createToken();
 
     if (!user) {
@@ -69,13 +95,34 @@ export class AuthService {
     }
 
     await this.userService.updateUserService(user.id, { vToken: token });
-    return this.mailService.sendForgetPasswordMail(user, token);
+    return this.mailService
+      .sendForgetPasswordMail(user, token)
+      .then(() => {
+        return { status: 'true' };
+      })
+      .catch((e) => {
+        console.log(e);
+        return { status: 'false' };
+      });
   }
 
   //Reset Password with new password service
   async resetPasswordService(user: UserEntity, password: string) {
     const pwd = encryptString(password);
-    return this.userService.updateUserService(user.id, { password: pwd });
+    const newToken = createToken();
+    return this.userService.updateUserService(user.id, {
+      password: pwd,
+      vToken: newToken,
+    });
+  }
+
+  async resetViewService(token: string): Promise<any> {
+    const user = await this.userService.getUserByAttrService({ vToken: token });
+    if (!!user) {
+      return { valid: true, user: user, token: token };
+    } else {
+      return { valid: false };
+    }
   }
 
   //Validate Token service *** Very important!!! Todo: security upgrade

@@ -1,0 +1,17 @@
+import { Query, Resolver } from '@nestjs/graphql';
+import { ChatEntity } from './chat.entity';
+import { ChatService } from './chat.service';
+import { UseGuards } from '@nestjs/common';
+import { CurrentUser, GqlAuthGuard } from '../../api/auth/guards/graphql.guard';
+import { UserEntity } from '../user/user.entity';
+
+@Resolver()
+export class ChatResolver {
+  constructor(private readonly chatService: ChatService) {}
+
+  @Query(() => ChatEntity)
+  @UseGuards(GqlAuthGuard)
+  async chats(@CurrentUser() user: UserEntity) {
+    return this.chatService.getChatsService(user);
+  }
+}
