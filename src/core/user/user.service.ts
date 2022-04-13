@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
+import { UsersDto } from './types/users.type';
+import { UsersSearchDto } from './types/search.type';
 
 @Injectable()
 export class UserService {
@@ -10,8 +12,17 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async getUsersService(): Promise<UserEntity[]> {
-    return this.userRepository.find();
+  async getUsersService(search: UsersSearchDto): Promise<UsersDto> {
+    console.log(search);
+    const data = await this.userRepository.find();
+    const total = await this.userRepository.count();
+    return {
+      data: data,
+      pagination: {
+        ...search.pagination,
+        total: total,
+      },
+    };
   }
 
   async getProfileService(id: string): Promise<UserEntity> {

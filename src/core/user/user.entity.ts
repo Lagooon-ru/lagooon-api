@@ -1,4 +1,11 @@
-import { Entity, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+  OneToOne,
+} from 'typeorm';
 import { BaseEntity } from '../../helper/base.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MediaEntity } from '../media/media.entity';
@@ -34,8 +41,13 @@ class UserEntity extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   isVerified: boolean;
 
-  @Field(() => [MediaEntity])
-  @OneToMany(() => MediaEntity, (media) => media.author)
+  @Field(() => MediaEntity)
+  @OneToOne(() => MediaEntity, (media) => media.id)
+  avatar: MediaEntity;
+
+  @Field(() => [MediaEntity], { nullable: true })
+  @OneToMany(() => MediaEntity, (media) => media.id, { nullable: false })
+  @JoinTable()
   medias: MediaEntity[];
 
   @Field(() => [ChatEntity], { nullable: true })
@@ -43,11 +55,9 @@ class UserEntity extends BaseEntity {
   @JoinTable()
   chats: ChatEntity[];
 
-  @Field()
   @Column({ type: 'varchar', length: 255, nullable: true })
   vToken: string;
 
-  @Field()
   @Column({ type: 'varchar', length: 255, nullable: true })
   rToken: string;
 }
