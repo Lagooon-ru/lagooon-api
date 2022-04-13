@@ -23,8 +23,12 @@ class StoryEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255 })
   type: string;
 
-  @Field((type) => [MediaEntity])
-  @OneToMany((type) => MediaEntity, (photo) => photo.id)
+  @Field(() => [String])
+  @Column('text', { array: true })
+  tags: string;
+
+  @Field(() => [MediaEntity])
+  @OneToMany(() => MediaEntity, (photo) => photo.id)
   photos: MediaEntity[];
 
   @Field()

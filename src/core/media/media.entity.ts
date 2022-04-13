@@ -7,7 +7,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @Entity({ name: 'files' })
 class MediaEntity extends BaseEntity {
   @Field(() => UserEntity)
-  @ManyToOne(() => UserEntity, (user) => user.medias)
+  @ManyToOne(() => UserEntity, (user) => user.id)
   author: UserEntity;
 
   @Field()
