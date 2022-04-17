@@ -15,6 +15,7 @@ import { StoryModule } from './core/story/story.module';
 import { AppController } from './app.controller';
 import { ChatModule } from './core/chat/chat.module';
 import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
+import { SearchModule } from './api/search/search.module';
 
 @Module({
   imports: [
@@ -34,6 +35,11 @@ import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      context: ({ req, res }) => ({ req, res }),
+      cors: {
+        credentials: true,
+        origin: true,
+      },
     }),
     UserModule,
     AuthModule,
@@ -44,6 +50,7 @@ import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
     StoryModule,
     ChatModule,
     CloudinaryModule,
+    SearchModule,
   ],
   controllers: [AppController],
 })

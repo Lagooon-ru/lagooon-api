@@ -16,11 +16,10 @@ export class MediaResolver {
   @UseGuards(GqlAuthGuard)
   async upload(
     @Args({ name: 'file', type: () => GraphQLUpload })
-    { createReadStream }: FileUpload,
+    file: Express.Multer.File,
     @CurrentUser() user: UserEntity,
   ): Promise<MediaEntity> {
-    console.log(createReadStream);
-    return this.mediaService.uploadService(createReadStream, user);
+    return this.mediaService.uploadService(file, user);
   }
 
   @Query(() => MediasDto)

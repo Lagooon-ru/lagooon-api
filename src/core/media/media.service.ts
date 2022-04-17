@@ -40,4 +40,8 @@ export class MediaService {
       },
     };
   }
+
+  async getById(id: string): Promise<MediaEntity> {
+    return this.mediaRepository.findOne(id);
+  }
 }

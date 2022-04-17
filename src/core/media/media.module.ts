@@ -18,5 +18,6 @@ import { memoryStorage } from 'multer';
   ],
   providers: [MediaService, MediaResolver],
   controllers: [MediaController],
+  exports: [MediaService],
 })
 export class MediaModule {}

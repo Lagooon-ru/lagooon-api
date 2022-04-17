@@ -1,15 +1,22 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { UsersDto } from './types/users.type';
 import { UsersSearchDto } from './types/search.type';
+import { MediaService } from '../media/media.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private readonly mediaService: MediaService,
   ) {}
 
   async getUsersService(search: UsersSearchDto): Promise<UsersDto> {
@@ -33,13 +40,14 @@ export class UserService {
   }
 
   async createUserService(user: any): Promise<UserEntity> {
-    const { name, email, password } = user;
+    const { name, email, password, vToken } = user;
 
     try {
       const newUser = await this.userRepository.create();
       newUser.name = name;
       newUser.email = email;
       newUser.password = password;
+      newUser.vToken = vToken;
       await this.userRepository.save(newUser);
       return newUser;
     } catch (err) {
@@ -52,6 +60,19 @@ export class UserService {
 
     if (!!data.email) {
       data.emailConfirmed = false;
+    }
+
+    if (!!data.phone) {
+      data.phoneConfirmed = false;
+    }
+
+    if (!!data.avatar) {
+      const image = await this.mediaService.getById(data.avatar);
+      if (!!image) {
+        data.avatar = image;
+      } else {
+        throw new BadRequestException('avatar is invalid value.');
+      }
     }
 
     return this.userRepository

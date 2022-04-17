@@ -9,6 +9,7 @@ import { UserEntity } from '../../core/user/user.entity';
 import { LoginDto, TLogin } from './types/login.type';
 import { MailService } from '../../service/mail/mail.service';
 import { createToken } from '../../helper/token.helper';
+import { ProfileDto } from './types/profile.type';
 
 @Injectable()
 export class AuthService {
@@ -68,6 +69,11 @@ export class AuthService {
       vToken: newToken,
       emailConfirmed: true,
     });
+  }
+
+  //Profile Service
+  async updateProfile(user: UserEntity, data: ProfileDto) {
+    return this.userService.updateUserService(user.id, data);
   }
 
   //Login Service

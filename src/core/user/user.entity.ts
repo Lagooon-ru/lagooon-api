@@ -4,7 +4,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
-  OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import { BaseEntity } from '../../helper/base.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
@@ -42,13 +42,8 @@ class UserEntity extends BaseEntity {
   isVerified: boolean;
 
   @Field(() => MediaEntity)
-  @OneToOne(() => MediaEntity, (media) => media.id)
+  @ManyToOne(() => MediaEntity, (media) => media.id)
   avatar: MediaEntity;
-
-  @Field(() => [MediaEntity], { nullable: true })
-  @OneToMany(() => MediaEntity, (media) => media.id, { nullable: false })
-  @JoinTable()
-  medias: MediaEntity[];
 
   @Field(() => [ChatEntity], { nullable: true })
   @ManyToMany(() => ChatEntity, (member) => member.members, { nullable: true })
