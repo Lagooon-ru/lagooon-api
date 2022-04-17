@@ -4,16 +4,31 @@ import { Repository } from 'typeorm';
 import { MediaEntity } from './media.entity';
 import { MediasDto } from './types/medias.type';
 import { MediasSearchDto } from './types/search.type';
+import { CloudinaryService } from '../../service/cloudinary/cloudinary.service';
+import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class MediaService {
   constructor(
     @InjectRepository(MediaEntity)
-    private postRepository: Repository<MediaEntity>,
+    private mediaRepository: Repository<MediaEntity>,
+    private readonly cldService: CloudinaryService,
   ) {}
 
-  async uploadService(): Promise<MediaEntity> {
-    return;
+  async uploadService(file, user: UserEntity): Promise<MediaEntity> {
+    const newMedia = await this.mediaRepository.create();
+    const f = await this.cldService.uploadImage(file);
+    console.log(f);
+    const { url, format, bytes, width, height, asset_id } = f;
+    newMedia.path = url;
+    newMedia.format = format;
+    newMedia.size = bytes;
+    newMedia.height = height;
+    newMedia.width = width;
+    newMedia.asset_id = asset_id;
+    newMedia.author = user;
+
+    return this.mediaRepository.save(newMedia);
   }
 
   async getMedias(search: MediasSearchDto): Promise<MediasDto> {
@@ -24,5 +39,9 @@ export class MediaService {
         total: 10,
       },
     };
+  }
+
+  async getById(id: string): Promise<MediaEntity> {
+    return this.mediaRepository.findOne(id);
   }
 }

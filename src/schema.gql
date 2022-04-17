@@ -9,10 +9,12 @@ type MediaEntity {
   createdAt: DateTime!
   updatedAt: DateTime!
   author: UserEntity!
-  name: String!
+  asset_id: String!
   path: String!
-  type: String!
-  size: String!
+  format: String!
+  size: String
+  height: String
+  width: String
 }
 
 """
@@ -56,7 +58,6 @@ type UserEntity {
   phoneConfirmed: Boolean!
   isVerified: Boolean!
   avatar: MediaEntity!
-  medias: [MediaEntity!]
   chats: [ChatEntity!]
 }
 
@@ -71,18 +72,22 @@ type UsersDto {
   pagination: PaginationDto!
 }
 
+type MediasDto {
+  data: [MediaEntity!]!
+  pagination: PaginationDto!
+}
+
 type TLogin {
   user: UserEntity!
   access_token: String!
 }
 
-type TForget {
-  status: String!
+type TLogout {
+  status: Boolean!
 }
 
-type MediasDto {
-  data: [MediaEntity!]!
-  pagination: PaginationDto!
+type TForget {
+  status: String!
 }
 
 type PostEntity {
@@ -96,6 +101,8 @@ type PostEntity {
   description: String!
   type: String!
   photos: [MediaEntity!]!
+  rate: Float!
+  score: Float!
   size: String!
 }
 
@@ -127,8 +134,8 @@ type StoriesDto {
 type Query {
   users(search: UsersSearchDto!): UsersDto!
   user(id: String!): UserEntity!
-  profile: UserEntity!
   medias: MediasDto!
+  profile: UserEntity!
   posts: PostsDto!
   stories: StoriesDto!
   story: StoryEntity!
@@ -146,14 +153,19 @@ input SearchPaginationDto {
 }
 
 type Mutation {
+  upload(file: Upload!): MediaEntity!
   signup(arg: RegisterDto!): TLogin!
   emailConfirm(email: String!): TForget!
   login(arg: LoginDto!): TLogin!
+  logout: TLogout!
   forget(email: String!): TForget!
   resetPassword(arg: ResetPassDto!): UserEntity!
-  upload: MediaEntity!
+  profileUpdate(arg: ProfileDto!): UserEntity!
   createChat(arg: CreateChatDto!): ChatEntity!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input RegisterDto {
   name: String!
@@ -169,6 +181,14 @@ input LoginDto {
 input ResetPassDto {
   token: String!
   password: String!
+}
+
+input ProfileDto {
+  email: String
+  phone: String
+  name: String
+  password: String
+  avatar: String
 }
 
 input CreateChatDto {

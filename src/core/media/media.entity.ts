@@ -12,7 +12,7 @@ class MediaEntity extends BaseEntity {
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
-  name: string;
+  asset_id: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
@@ -20,11 +20,19 @@ class MediaEntity extends BaseEntity {
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
-  type: string;
+  format: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 255 })
   size: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'int' })
+  height: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'int' })
+  width: string;
 }
 
 export { MediaEntity };

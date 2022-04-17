@@ -25,6 +25,12 @@ export class TLogin {
 }
 
 @ObjectType()
+export class TLogout {
+  @Field()
+  status: boolean;
+}
+
+@ObjectType()
 export class TForget {
   @Field()
   status: string;
