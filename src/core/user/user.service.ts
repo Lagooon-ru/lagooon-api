@@ -13,7 +13,6 @@ export class UserService {
   ) {}
 
   async getUsersService(search: UsersSearchDto): Promise<UsersDto> {
-    console.log(search);
     const data = await this.userRepository.find();
     const total = await this.userRepository.count();
     return {

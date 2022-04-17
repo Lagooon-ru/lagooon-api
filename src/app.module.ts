@@ -14,6 +14,7 @@ import { PostModule } from './core/post/post.module';
 import { StoryModule } from './core/story/story.module';
 import { AppController } from './app.controller';
 import { ChatModule } from './core/chat/chat.module';
+import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ChatModule } from './core/chat/chat.module';
     PostModule,
     StoryModule,
     ChatModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
 })

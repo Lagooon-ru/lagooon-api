@@ -28,8 +28,24 @@ class PostEntity extends BaseEntity {
   photos: MediaEntity[];
 
   @Field()
+  @Column({ default: 0 })
+  rate: number;
+
+  @Field()
+  @Column({ default: 0 })
+  score: number;
+
+  @Field()
   @Column({ type: 'varchar', length: 255 })
   size: string;
 }
 
-export { PostEntity };
+@ObjectType()
+@Entity({ name: 'pComment' })
+class PostComment extends BaseEntity {
+  @Field()
+  @Column({ type: 'varchar', length: 1023 })
+  comment: string;
+}
+
+export { PostEntity, PostComment };

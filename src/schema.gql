@@ -9,10 +9,12 @@ type MediaEntity {
   createdAt: DateTime!
   updatedAt: DateTime!
   author: UserEntity!
-  name: String!
+  asset_id: String!
   path: String!
-  type: String!
-  size: String!
+  format: String!
+  size: String
+  height: String
+  width: String
 }
 
 """
@@ -96,6 +98,8 @@ type PostEntity {
   description: String!
   type: String!
   photos: [MediaEntity!]!
+  rate: Float!
+  score: Float!
   size: String!
 }
 
@@ -151,7 +155,7 @@ type Mutation {
   login(arg: LoginDto!): TLogin!
   forget(email: String!): TForget!
   resetPassword(arg: ResetPassDto!): UserEntity!
-  upload: MediaEntity!
+  upload(file: Upload!): MediaEntity!
   createChat(arg: CreateChatDto!): ChatEntity!
 }
 
@@ -170,6 +174,9 @@ input ResetPassDto {
   token: String!
   password: String!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input CreateChatDto {
   type: String!
