@@ -16,6 +16,10 @@ class MediaEntity extends BaseEntity {
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
+  public_id: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255 })
   path: string;
 
   @Field()

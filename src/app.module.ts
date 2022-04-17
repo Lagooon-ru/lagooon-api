@@ -18,6 +18,7 @@ import { SearchModule } from './api/search/search.module';
 import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
+import { AppEntity } from './app.entity';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { AppService } from './app.service';
         origin: true,
       },
     }),
+    TypeOrmModule.forFeature([AppEntity]),
     UserModule,
     AuthModule,
     MailModule,

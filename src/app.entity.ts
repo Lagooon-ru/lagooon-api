@@ -1,13 +1,18 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from './helper/base.entity';
+import { MediaEntity } from './core/media/media.entity';
 
 @ObjectType()
 @Entity({ name: 'app' })
 class AppEntity extends BaseEntity {
   @Field()
-  @Column({ type: Number, nullable: false })
-  name: number;
+  @Column({ type: String, length: 31, unique: true, nullable: false })
+  version: string;
+
+  @Field(() => MediaEntity)
+  @ManyToOne(() => MediaEntity, (media) => media.id, { nullable: true })
+  image: MediaEntity;
 
   @Field()
   @Column({ type: Boolean, default: true })

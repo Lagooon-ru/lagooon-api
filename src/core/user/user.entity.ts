@@ -4,9 +4,23 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { MediaEntity } from '../media/media.entity';
 import { ChatEntity } from '../chat/chat.entity';
 
+export enum RoleFormat {
+  CONSUMER = 'cu',
+  VIP = 'vip',
+  COMPANY = 'cp',
+  GROUP = 'gp',
+  ADMIN = 'ad',
+  SUPERUSER = 'su',
+  SUPPORT = 'sp',
+}
+
 @ObjectType()
 @Entity({ name: 'user' })
 class UserEntity extends BaseEntity {
+  @Field()
+  @Column({ type: 'enum', enum: RoleFormat, default: RoleFormat.CONSUMER })
+  role: RoleFormat;
+
   @Field()
   @Column({ type: 'varchar', length: 63, nullable: true })
   name: string;
