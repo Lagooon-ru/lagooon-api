@@ -14,8 +14,11 @@ import { PostModule } from './core/post/post.module';
 import { StoryModule } from './core/story/story.module';
 import { AppController } from './app.controller';
 import { ChatModule } from './core/chat/chat.module';
-import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
 import { SearchModule } from './api/search/search.module';
+import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
+import { AppResolver } from './app.resolver';
+import { AppService } from './app.service';
+import { AppEntity } from './app.entity';
 
 @Module({
   imports: [
@@ -41,6 +44,7 @@ import { SearchModule } from './api/search/search.module';
         origin: true,
       },
     }),
+    TypeOrmModule.forFeature([AppEntity]),
     UserModule,
     AuthModule,
     MailModule,
@@ -53,6 +57,7 @@ import { SearchModule } from './api/search/search.module';
     SearchModule,
   ],
   controllers: [AppController],
+  providers: [AppResolver, AppService],
 })
 export class AppModule {
   constructor(private connection: Connection) {}

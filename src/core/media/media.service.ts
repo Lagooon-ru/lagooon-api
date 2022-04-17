@@ -19,13 +19,14 @@ export class MediaService {
     const newMedia = await this.mediaRepository.create();
     const f = await this.cldService.uploadImage(file);
     console.log(f);
-    const { url, format, bytes, width, height, asset_id } = f;
+    const { url, format, bytes, width, height, asset_id, public_id } = f;
     newMedia.path = url;
     newMedia.format = format;
     newMedia.size = bytes;
     newMedia.height = height;
     newMedia.width = width;
     newMedia.asset_id = asset_id;
+    newMedia.public_id = public_id;
     newMedia.author = user;
 
     return this.mediaRepository.save(newMedia);

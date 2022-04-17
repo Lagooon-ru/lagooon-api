@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
@@ -40,14 +35,24 @@ export class UserService {
   }
 
   async createUserService(user: any): Promise<UserEntity> {
-    const { name, email, password, vToken } = user;
+    const { username, avatar, bio, name, email, password, vToken } = user;
 
     try {
       const newUser = await this.userRepository.create();
       newUser.name = name;
+      newUser.username = username;
+      newUser.bio = bio;
       newUser.email = email;
       newUser.password = password;
       newUser.vToken = vToken;
+
+      if (!!avatar) {
+        const image = await this.mediaService.getById(avatar);
+        if (!!image) {
+          newUser.avatar = image;
+        }
+      }
+
       await this.userRepository.save(newUser);
       return newUser;
     } catch (err) {
@@ -64,15 +69,6 @@ export class UserService {
 
     if (!!data.phone) {
       data.phoneConfirmed = false;
-    }
-
-    if (!!data.avatar) {
-      const image = await this.mediaService.getById(data.avatar);
-      if (!!image) {
-        data.avatar = image;
-      } else {
-        throw new BadRequestException('avatar is invalid value.');
-      }
     }
 
     return this.userRepository

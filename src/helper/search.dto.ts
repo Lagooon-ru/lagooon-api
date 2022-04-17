@@ -1,9 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { PaginationDto, SearchPaginationDto } from './pagination.dto';
+import { PaginationDto } from './pagination.dto';
 
 @InputType()
 class SearchDto {
-  @Field(() => SearchPaginationDto)
+  @Field(() => PaginationDto)
   pagination: PaginationDto;
 
   @Field({ nullable: true })
