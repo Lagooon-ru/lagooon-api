@@ -72,7 +72,7 @@ export class AuthService {
   }
 
   //Profile Service
-  async updateProfile(user: UserEntity, data: ProfileDto) {
+  async updateProfile(user: UserEntity, data: ProfileDto): Promise<UserEntity> {
     return this.userService.updateUserService(user.id, data);
   }
 

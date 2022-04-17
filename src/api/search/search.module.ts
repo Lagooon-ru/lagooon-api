@@ -3,6 +3,6 @@ import { SearchService } from './search.service';
 import { SearchResolver } from './search.resolver';
 
 @Module({
-  providers: [SearchService, SearchResolver]
+  providers: [SearchService, SearchResolver],
 })
 export class SearchModule {}

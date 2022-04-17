@@ -3,14 +3,7 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import {
-  Args,
-  Context,
-  GraphQLExecutionContext,
-  Mutation,
-  Query,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { CurrentUser, GqlAuthGuard, GRes } from './guards/graphql.guard';
 import { RegisterDto } from './types/register.type';
@@ -18,7 +11,6 @@ import { LoginDto, TForget, TLogin, TLogout } from './types/login.type';
 import { UserEntity } from '../../core/user/user.entity';
 import { ResetPassDto } from './types/reset.type';
 import { ProfileDto } from './types/profile.type';
-import { boolean } from 'joi';
 
 @Resolver()
 export class AuthResolver {

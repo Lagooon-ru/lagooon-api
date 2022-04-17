@@ -14,8 +14,8 @@ import { PostModule } from './core/post/post.module';
 import { StoryModule } from './core/story/story.module';
 import { AppController } from './app.controller';
 import { ChatModule } from './core/chat/chat.module';
-import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
 import { SearchModule } from './api/search/search.module';
+import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
