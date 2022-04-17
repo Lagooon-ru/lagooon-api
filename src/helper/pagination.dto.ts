@@ -1,7 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-class PaginationDto {
+class TPagination {
   @Field()
   total: number;
 
@@ -13,7 +13,7 @@ class PaginationDto {
 }
 
 @InputType()
-class SearchPaginationDto {
+class PaginationDto {
   @Field()
   limit: number;
 
@@ -21,4 +21,4 @@ class SearchPaginationDto {
   page: number;
 }
 
-export { PaginationDto, SearchPaginationDto };
+export { PaginationDto, TPagination };

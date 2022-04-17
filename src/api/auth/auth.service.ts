@@ -144,14 +144,19 @@ export class AuthService {
 
   //initial validation for the local passport
   async validate(dat: LoginDto): Promise<any> {
-    const user = await this.userService.getUserByAttrService({
-      email: dat.email,
+    let u = await this.userService.getUserByAttrService({
+      email: dat.user,
     });
-    if (!user) {
-      return null;
+    if (!u) {
+      u = await this.userService.getUserByAttrService({
+        username: dat.user,
+      });
+      if (!u) {
+        return null;
+      }
     }
-    const passwordIsValid = decryptString(dat.password, user.password);
-    return passwordIsValid ? user : null;
+    const passwordIsValid = decryptString(dat.password, u.password);
+    return passwordIsValid ? u : null;
   }
 
   async validateUserService(arg: any): Promise<UserEntity | null> {

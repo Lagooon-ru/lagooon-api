@@ -52,6 +52,8 @@ type UserEntity {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
+  username: String!
+  bio: String!
   email: String!
   emailConfirmed: Boolean!
   phone: String!
@@ -61,7 +63,7 @@ type UserEntity {
   chats: [ChatEntity!]
 }
 
-type PaginationDto {
+type TPagination {
   total: Float!
   limit: Float!
   page: Float!
@@ -69,12 +71,12 @@ type PaginationDto {
 
 type UsersDto {
   data: [UserEntity!]!
-  pagination: PaginationDto!
+  pagination: TPagination!
 }
 
 type MediasDto {
   data: [MediaEntity!]!
-  pagination: PaginationDto!
+  pagination: TPagination!
 }
 
 type TLogin {
@@ -108,7 +110,7 @@ type PostEntity {
 
 type PostsDto {
   data: [PostEntity!]!
-  pagination: PaginationDto!
+  pagination: TPagination!
 }
 
 type StoryEntity {
@@ -128,7 +130,12 @@ type StoryEntity {
 
 type StoriesDto {
   data: [StoryEntity!]!
-  pagination: PaginationDto!
+  pagination: TPagination!
+}
+
+type TSearch {
+  results: [String!]!
+  pagination: TPagination!
 }
 
 type Query {
@@ -140,16 +147,22 @@ type Query {
   stories: StoriesDto!
   story: StoryEntity!
   chats: [ChatEntity!]!
+  search(arg: SearchDto!): TSearch!
 }
 
 input UsersSearchDto {
-  pagination: SearchPaginationDto!
+  pagination: PaginationDto!
   keyword: String
 }
 
-input SearchPaginationDto {
+input PaginationDto {
   limit: Float!
   page: Float!
+}
+
+input SearchDto {
+  keyword: String!
+  pagination: PaginationDto!
 }
 
 type Mutation {
@@ -168,13 +181,16 @@ type Mutation {
 scalar Upload
 
 input RegisterDto {
-  name: String!
+  name: String
+  bio: String
+  avatar: String
+  username: String!
   email: String!
   password: String!
 }
 
 input LoginDto {
-  email: String!
+  user: String!
   password: String!
 }
 

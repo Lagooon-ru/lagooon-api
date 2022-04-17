@@ -16,6 +16,8 @@ import { AppController } from './app.controller';
 import { ChatModule } from './core/chat/chat.module';
 import { SearchModule } from './api/search/search.module';
 import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
+import { AppResolver } from './app.resolver';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -53,6 +55,7 @@ import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
     SearchModule,
   ],
   controllers: [AppController],
+  providers: [AppResolver, AppService],
 })
 export class AppModule {
   constructor(private connection: Connection) {}
