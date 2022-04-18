@@ -3,8 +3,11 @@ import { PaginationDto } from './pagination.dto';
 
 @InputType()
 class SearchDto {
-  @Field(() => PaginationDto)
+  @Field(() => PaginationDto, { nullable: true })
   pagination: PaginationDto;
+
+  @Field({ nullable: true })
+  sort: string;
 
   @Field({ nullable: true })
   keyword: string;

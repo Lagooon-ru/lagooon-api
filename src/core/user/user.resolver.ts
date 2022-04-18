@@ -1,15 +1,19 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
-import { UsersDto } from './types/users.type';
+import { TUsers } from './types/users.type';
 import { UsersSearchDto } from './types/search.type';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Query(() => UsersDto)
-  users(@Args('search') search: UsersSearchDto): Promise<UsersDto> {
+  @Query(() => TUsers)
+  users(@Args('search') search: UsersSearchDto): Promise<TUsers> {
+    if (search.pagination?.limit > 99) {
+      throw new BadRequestException('max limit is 99');
+    }
     return this.userService.getUsersService(search);
   }
 

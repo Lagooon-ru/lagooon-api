@@ -1,8 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { Repository } from 'typeorm';
-import { UsersDto } from './types/users.type';
+import {
+  Equal,
+  FindManyOptions,
+  ILike,
+  In,
+  Like,
+  MoreThan,
+  Repository,
+} from 'typeorm';
+import { TUsers } from './types/users.type';
 import { UsersSearchDto } from './types/search.type';
 import { MediaService } from '../media/media.service';
 
@@ -14,14 +22,31 @@ export class UserService {
     private readonly mediaService: MediaService,
   ) {}
 
-  async getUsersService(search: UsersSearchDto): Promise<UsersDto> {
-    const data = await this.userRepository.find();
-    const total = await this.userRepository.count();
+  async getUsersService(search: UsersSearchDto): Promise<TUsers> {
+    const limit = search.pagination?.limit || 10;
+    const page = search.pagination?.page || 0;
+    const keyword = search.keyword || '';
+    const where: FindManyOptions<UserEntity>['where'] = [];
+    if (!!keyword) {
+      where.push({ username: Like(`%${keyword}%`) });
+      where.push({ name: Like(`%${keyword}%`) });
+    }
+
+    const [item, count] = await this.userRepository.findAndCount({
+      where,
+      order: {
+        id: 'ASC',
+      },
+      skip: page * limit,
+      take: limit,
+    });
+
     return {
-      data: data,
+      data: item,
       pagination: {
-        ...search.pagination,
-        total: total,
+        limit: limit,
+        page: page,
+        total: count,
       },
     };
   }
