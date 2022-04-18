@@ -30,6 +30,7 @@ export class UserService {
     if (!!keyword) {
       where.push({ username: Like(`%${keyword}%`) });
       where.push({ name: Like(`%${keyword}%`) });
+      where.push({ email: Like(`%${keyword}%`) });
     }
 
     const [item, count] = await this.userRepository.findAndCount({

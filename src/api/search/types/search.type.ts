@@ -1,20 +1,17 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { PaginationDto, TPagination } from '../../../helper/pagination.dto';
-
-@ObjectType()
-export class TSearch {
-  @Field(() => [String])
-  results: string[];
-
-  @Field()
-  pagination: TPagination;
+interface UserSearchBody {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
 }
 
-@InputType()
-export class SearchDto {
-  @Field()
-  keyword: string;
-
-  @Field()
-  pagination: PaginationDto;
+interface UserSearchResult {
+  hits: {
+    total: number;
+    hits: Array<{
+      _source: UserSearchBody;
+    }>;
+  };
 }
+
+export { UserSearchBody, UserSearchResult };
