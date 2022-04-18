@@ -3,7 +3,7 @@ import { UserEntity } from '../user.entity';
 import { TPagination } from '../../../helper/pagination.dto';
 
 @ObjectType()
-class UsersDto {
+class TUsers {
   @Field(() => [UserEntity])
   data: UserEntity[];
 
@@ -11,4 +11,4 @@ class UsersDto {
   pagination: TPagination;
 }
 
-export { UsersDto };
+export { TUsers };

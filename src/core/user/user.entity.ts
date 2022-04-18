@@ -21,7 +21,7 @@ class UserEntity extends BaseEntity {
   @Column({ type: 'enum', enum: RoleFormat, default: RoleFormat.CONSUMER })
   role: RoleFormat;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 63, nullable: true })
   name: string;
 
@@ -29,7 +29,7 @@ class UserEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 63, unique: true, nullable: false })
   username: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 63, nullable: true })
   bio: string;
 
@@ -41,7 +41,7 @@ class UserEntity extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   emailConfirmed: boolean;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
   phone: string;
 
@@ -56,7 +56,7 @@ class UserEntity extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   isVerified: boolean;
 
-  @Field(() => MediaEntity)
+  @Field(() => MediaEntity, { nullable: true })
   @ManyToOne(() => MediaEntity, (media) => media.id)
   avatar: MediaEntity;
 

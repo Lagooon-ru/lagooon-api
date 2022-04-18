@@ -53,15 +53,15 @@ type UserEntity {
   createdAt: DateTime!
   updatedAt: DateTime!
   role: String!
-  name: String!
+  name: String
   username: String!
-  bio: String!
+  bio: String
   email: String!
   emailConfirmed: Boolean!
-  phone: String!
+  phone: String
   phoneConfirmed: Boolean!
   isVerified: Boolean!
-  avatar: MediaEntity!
+  avatar: MediaEntity
   chats: [ChatEntity!]
 }
 
@@ -71,7 +71,7 @@ type TPagination {
   page: Float!
 }
 
-type UsersDto {
+type TUsers {
   data: [UserEntity!]!
   pagination: TPagination!
 }
@@ -170,7 +170,7 @@ type TVersion {
 type Query {
   versions: [AppEntity!]!
   info(arg: VersionDto!): TVersion!
-  users(search: UsersSearchDto!): UsersDto!
+  users(search: UsersSearchDto!): TUsers!
   user(id: String!): UserEntity!
   medias: MediasDto!
   profile: UserEntity!
@@ -186,13 +186,14 @@ input VersionDto {
 }
 
 input UsersSearchDto {
-  pagination: PaginationDto!
+  pagination: PaginationDto
+  sort: String
   keyword: String
 }
 
 input PaginationDto {
-  limit: Float!
-  page: Float!
+  limit: Float
+  page: Float
 }
 
 input SearchDto {

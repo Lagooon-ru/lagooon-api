@@ -1,4 +1,5 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { IsNumber } from 'class-validator';
 
 @ObjectType()
 class TPagination {
@@ -14,10 +15,12 @@ class TPagination {
 
 @InputType()
 class PaginationDto {
-  @Field()
+  @IsNumber()
+  @Field({ nullable: true })
   limit: number;
 
-  @Field()
+  @IsNumber()
+  @Field({ nullable: true })
   page: number;
 }
 
