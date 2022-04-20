@@ -33,5 +33,5 @@ export class TLogout {
 @ObjectType()
 export class TForget {
   @Field()
-  status: string;
+  status: boolean;
 }

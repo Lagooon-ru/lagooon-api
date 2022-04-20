@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import { PostEntity } from './post.entity';
 import { PostsSearchDto } from './types/search.type';
 import { PostsDto } from './types/posts.type';
+import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class PostService {
@@ -13,14 +14,30 @@ export class PostService {
   ) {}
 
   async getPosts(search: PostsSearchDto): Promise<PostsDto> {
-    const data = await this.postRepository.find();
-    const total = await this.postRepository.count();
+    const limit = search.pagination?.limit || 10;
+    const page = search.pagination?.page || 0;
+    const keyword = search.keyword || '';
+    const where: FindManyOptions<UserEntity>['where'] = [];
+    if (!!keyword) {
+      where.push({ title: Like(`%${keyword}%`) });
+      where.push({ description: Like(`%${keyword}%`) });
+    }
+
+    const [item, count] = await this.postRepository.findAndCount({
+      where,
+      order: {
+        id: 'ASC',
+      },
+      skip: page * limit,
+      take: limit,
+    });
 
     return {
-      data: data,
+      data: item,
       pagination: {
-        ...search.pagination,
-        total: total,
+        limit: limit,
+        page: page,
+        total: count,
       },
     };
   }

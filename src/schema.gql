@@ -91,7 +91,7 @@ type TLogout {
 }
 
 type TForget {
-  status: String!
+  status: Boolean!
 }
 
 type PostEntity {
@@ -100,11 +100,12 @@ type PostEntity {
   isArchived: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
-  author: String!
+  author: UserEntity!
   title: String!
   description: String!
   type: String!
   photos: [MediaEntity!]!
+  likes: [UserEntity!]!
   rate: Float!
   score: Float!
   size: String!
@@ -169,7 +170,7 @@ type Query {
   user(id: String!): UserEntity!
   medias: MediasDto!
   profile: UserEntity!
-  posts: PostsDto!
+  posts(search: PostsSearchDto!): PostsDto!
   stories: StoriesDto!
   story: StoryEntity!
   chats: [ChatEntity!]!
@@ -188,6 +189,12 @@ input UsersSearchDto {
 input PaginationDto {
   limit: Float
   page: Float
+}
+
+input PostsSearchDto {
+  pagination: PaginationDto
+  sort: String
+  keyword: String
 }
 
 type Mutation {
