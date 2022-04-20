@@ -236,6 +236,7 @@ input ProfileDto {
   email: String
   phone: String
   name: String
+  bio: String
   password: String
   avatar: String
 }

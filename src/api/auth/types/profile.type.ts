@@ -1,5 +1,4 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEmail, IsString } from 'class-validator';
 
 @InputType()
 export class ProfileDto {
@@ -11,6 +10,9 @@ export class ProfileDto {
 
   @Field({ nullable: true })
   name: string;
+
+  @Field({ nullable: true })
+  bio: string;
 
   @Field({ nullable: true })
   password: string;
