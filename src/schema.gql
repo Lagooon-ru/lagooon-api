@@ -135,11 +135,6 @@ type StoriesDto {
   pagination: TPagination!
 }
 
-type TSearch {
-  results: [String!]!
-  pagination: TPagination!
-}
-
 type AppEntity {
   id: String!
   isActive: Boolean!
@@ -178,7 +173,6 @@ type Query {
   stories: StoriesDto!
   story: StoryEntity!
   chats: [ChatEntity!]!
-  search(arg: SearchDto!): TSearch!
 }
 
 input VersionDto {
@@ -194,11 +188,6 @@ input UsersSearchDto {
 input PaginationDto {
   limit: Float
   page: Float
-}
-
-input SearchDto {
-  keyword: String!
-  pagination: PaginationDto!
 }
 
 type Mutation {
@@ -247,6 +236,7 @@ input ProfileDto {
   email: String
   phone: String
   name: String
+  bio: String
   password: String
   avatar: String
 }
