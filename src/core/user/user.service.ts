@@ -1,18 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import {
-  Equal,
-  FindManyOptions,
-  ILike,
-  In,
-  Like,
-  MoreThan,
-  Repository,
-} from 'typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import { TUsers } from './types/users.type';
 import { UsersSearchDto } from './types/search.type';
 import { MediaService } from '../media/media.service';
+import { SearchService } from '../../api/search/search.service';
 
 @Injectable()
 export class UserService {
@@ -20,6 +13,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private readonly mediaService: MediaService,
+    private readonly searchService: SearchService,
   ) {}
 
   async getUsersService(search: UsersSearchDto): Promise<TUsers> {
@@ -80,6 +74,7 @@ export class UserService {
       }
 
       await this.userRepository.save(newUser);
+      await this.searchService.indexUser(newUser);
       return newUser;
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);

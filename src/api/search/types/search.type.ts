@@ -1,17 +1,14 @@
-interface UserSearchBody {
+type UserSearchBody = {
   id: string;
   name: string;
   username: string;
-  email: string;
-}
+};
 
-interface UserSearchResult {
+type UserSearchResult = {
   hits: {
     total: number;
-    hits: Array<{
-      _source: UserSearchBody;
-    }>;
+    hits: { _source: UserSearchBody }[];
   };
-}
+};
 
-export { UserSearchBody, UserSearchResult };
+export { UserSearchResult, UserSearchBody };
