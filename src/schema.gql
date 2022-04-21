@@ -190,6 +190,7 @@ type FeedEntity {
   caption: String!
   photos: [MediaEntity!]!
   likes: [UserEntity!]!
+  comments: [FeedCommentEntity!]!
   score: Float!
 }
 
@@ -209,6 +210,10 @@ type FeedCommentEntity {
 type TFeeds {
   data: [FeedEntity!]!
   pagination: TPagination!
+}
+
+type TFeedLike {
+  status: Boolean!
 }
 
 type Query {
@@ -265,7 +270,9 @@ type Mutation {
   profileUpdate(arg: ProfileDto!): UserEntity!
   createPost(post: PostDto!): PostEntity!
   createChat(arg: CreateChatDto!): ChatEntity!
-  createFeed(feed: FeedDto!): FeedEntity!
+  feedCreate(feed: FeedCreateDto!): FeedEntity!
+  feedLike(feed: FeedLikeDto!): TFeedLike!
+  feedAddComment(feed: FeedAddCommentDto!): FeedCommentEntity!
 }
 
 input ReleaseDto {
@@ -324,7 +331,18 @@ input CreateChatDto {
   description: String!
 }
 
-input FeedDto {
+input FeedCreateDto {
   caption: String!
   photos: [String!]!
+}
+
+input FeedLikeDto {
+  id: String!
+  action: Boolean!
+}
+
+input FeedAddCommentDto {
+  parentId: String
+  feedId: String!
+  content: String!
 }

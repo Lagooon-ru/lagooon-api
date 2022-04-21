@@ -34,6 +34,13 @@ class FeedEntity extends BaseEntity {
   @JoinTable()
   likes: UserEntity[];
 
+  @Field(() => [FeedCommentEntity])
+  @OneToMany(() => FeedCommentEntity, (comment) => comment.feed, {
+    nullable: true,
+  })
+  @JoinTable()
+  comments: FeedCommentEntity[];
+
   @Field()
   @Column({ default: 0 })
   score: number;
@@ -43,7 +50,7 @@ class FeedEntity extends BaseEntity {
 @Entity({ name: 'fComment' })
 class FeedCommentEntity extends BaseEntity {
   @Field(() => FeedEntity)
-  @ManyToOne(() => FeedEntity, (feed) => feed.id)
+  @ManyToOne(() => FeedEntity, (feed) => feed.comments)
   @JoinTable()
   feed: FeedEntity;
 

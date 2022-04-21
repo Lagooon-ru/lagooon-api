@@ -11,4 +11,16 @@ class TFeeds {
   pagination: TPagination;
 }
 
-export { TFeeds };
+@ObjectType()
+class TFeedLike {
+  @Field()
+  status: boolean;
+}
+
+@ObjectType()
+class TFeedAddComment {
+  @Field()
+  status: boolean;
+}
+
+export { TFeeds, TFeedLike, TFeedAddComment };
