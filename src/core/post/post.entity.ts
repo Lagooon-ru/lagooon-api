@@ -1,4 +1,11 @@
-import { Entity, Column, OneToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToOne,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
+} from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from '../../helper/base.entity';
 import { MediaEntity } from '../media/media.entity';
@@ -28,12 +35,8 @@ class PostEntity extends BaseEntity {
   photos: MediaEntity[];
 
   @Field(() => [UserEntity])
-  @OneToMany(() => UserEntity, (user) => user.id)
+  @ManyToMany(() => UserEntity, (user) => user.id)
   likes: UserEntity[];
-
-  @Field()
-  @Column({ default: 0 })
-  rate: number;
 
   @Field()
   @Column({ default: 0 })
@@ -42,18 +45,30 @@ class PostEntity extends BaseEntity {
   @Field()
   @Column({ type: 'varchar', length: 255 })
   size: string;
+
+  @Field(() => [PostCommentEntity])
+  @OneToMany(() => PostCommentEntity, (comment) => comment.id)
+  comments: PostCommentEntity[];
 }
 
 @ObjectType()
 @Entity({ name: 'pComment' })
-class PostComment extends BaseEntity {
+class PostCommentEntity extends BaseEntity {
   @Field(() => UserEntity)
-  @OneToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, (user) => user.id)
   author: UserEntity;
+
+  @Field(() => PostCommentEntity)
+  @ManyToOne(() => PostCommentEntity, (comment) => comment.id)
+  parent: PostCommentEntity;
+
+  @Field(() => [UserEntity])
+  @OneToMany(() => UserEntity, (user) => user.id)
+  likes: UserEntity[];
 
   @Field()
   @Column({ type: 'varchar', length: 1023 })
   comment: string;
 }
 
-export { PostEntity, PostComment };
+export { PostEntity, PostCommentEntity };

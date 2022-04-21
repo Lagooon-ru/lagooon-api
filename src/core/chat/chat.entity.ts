@@ -38,7 +38,6 @@ class ChatEntity extends BaseEntity {
 class MessageEntity extends BaseEntity {
   @Field(() => UserEntity)
   @OneToMany(() => UserEntity, (member) => member.id)
-  @JoinTable()
   sender: UserEntity;
 
   @Field()

@@ -19,6 +19,7 @@ import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AppEntity } from './app.entity';
+import { FeedModule } from './core/feed/feed.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { AppEntity } from './app.entity';
     ChatModule,
     CloudinaryModule,
     SearchModule,
+    FeedModule,
   ],
   controllers: [AppController],
   providers: [AppResolver, AppService],

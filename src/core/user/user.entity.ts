@@ -1,4 +1,11 @@
-import { Entity, Column, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToMany,
+  JoinTable,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { BaseEntity } from '../../helper/base.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MediaEntity } from '../media/media.entity';
@@ -59,6 +66,11 @@ class UserEntity extends BaseEntity {
   @Field(() => MediaEntity, { nullable: true })
   @ManyToOne(() => MediaEntity, (media) => media.id)
   avatar: MediaEntity;
+
+  @Field(() => [UserEntity], { nullable: true })
+  @ManyToMany(() => UserEntity, (member) => member.id, { nullable: true })
+  @JoinTable()
+  follow: UserEntity[];
 
   @Field(() => [ChatEntity], { nullable: true })
   @ManyToMany(() => ChatEntity, (member) => member.members, { nullable: true })

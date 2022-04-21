@@ -20,7 +20,7 @@ export class AuthService {
   ) {}
 
   async getProfile(id: string): Promise<UserEntity> {
-    return this.userService.getUserByAttrService({ id: id });
+    return this.userService.getProfileService(id);
   }
 
   //Signup Service
