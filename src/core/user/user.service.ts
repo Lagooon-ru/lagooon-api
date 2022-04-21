@@ -6,6 +6,7 @@ import { TUsers } from './types/users.type';
 import { UsersSearchDto } from './types/search.type';
 import { MediaService } from '../media/media.service';
 import { SearchService } from '../../api/search/search.service';
+import { TFollow } from './types/follow.type';
 
 @Injectable()
 export class UserService {
@@ -29,6 +30,7 @@ export class UserService {
 
     const [item, count] = await this.userRepository.findAndCount({
       where,
+      relations: ['follow'],
       order: {
         id: 'ASC',
       },
@@ -47,11 +49,19 @@ export class UserService {
   }
 
   async getProfileService(id: string): Promise<UserEntity> {
-    return this.userRepository.findOne(id);
+    return this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: ['follow'],
+    });
   }
 
   async getUserByAttrService(attr: any): Promise<UserEntity> {
-    return this.userRepository.findOne({ ...attr });
+    return this.userRepository.findOne({
+      where: { ...attr },
+      relations: ['follow'],
+    });
   }
 
   async createUserService(user: any): Promise<UserEntity> {
@@ -74,7 +84,7 @@ export class UserService {
       }
 
       await this.userRepository.save(newUser);
-      await this.searchService.indexUser(newUser);
+      // await this.searchService.indexUser(newUser);
       return newUser;
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
@@ -82,7 +92,10 @@ export class UserService {
   }
 
   async updateUserService(id: string, data: any) {
-    const user = await this.userRepository.findOne(id);
+    const user = await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['follow'],
+    });
 
     if (!!data.email) {
       data.emailConfirmed = false;
@@ -104,5 +117,26 @@ export class UserService {
         console.log(err);
         throw new HttpException(err, 500);
       });
+  }
+
+  //FOLLOWING
+  async followService(
+    user: UserEntity,
+    follower: UserEntity,
+    following: boolean,
+  ): Promise<TFollow> {
+    if (following) {
+      if (!!follower.follow) {
+        follower.follow.push(user);
+      } else {
+        follower.follow = [user];
+      }
+    } else {
+    }
+
+    await this.userRepository.save(follower);
+    return {
+      status: following,
+    };
   }
 }

@@ -62,6 +62,7 @@ type UserEntity {
   phoneConfirmed: Boolean!
   isVerified: Boolean!
   avatar: MediaEntity
+  follow: [UserEntity!]
   chats: [ChatEntity!]
 }
 
@@ -74,6 +75,10 @@ type TPagination {
 type TUsers {
   data: [UserEntity!]!
   pagination: TPagination!
+}
+
+type TFollow {
+  status: Boolean
 }
 
 type MediasDto {
@@ -106,9 +111,21 @@ type PostEntity {
   type: String!
   photos: [MediaEntity!]!
   likes: [UserEntity!]!
-  rate: Float!
   score: Float!
   size: String!
+  comments: [PostCommentEntity!]!
+}
+
+type PostCommentEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: UserEntity!
+  parent: PostCommentEntity!
+  likes: [UserEntity!]!
+  comment: String!
 }
 
 type PostsDto {
@@ -163,6 +180,37 @@ type TVersion {
   img: String!
 }
 
+type FeedEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: UserEntity!
+  caption: String!
+  photos: [MediaEntity!]!
+  likes: [UserEntity!]!
+  score: Float!
+}
+
+type FeedCommentEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  feed: FeedEntity!
+  author: UserEntity!
+  parent: FeedCommentEntity!
+  likes: [UserEntity!]!
+  comment: String!
+}
+
+type TFeeds {
+  data: [FeedEntity!]!
+  pagination: TPagination!
+}
+
 type Query {
   versions: [AppEntity!]!
   info(arg: VersionDto!): TVersion!
@@ -174,6 +222,7 @@ type Query {
   stories: StoriesDto!
   story: StoryEntity!
   chats: [ChatEntity!]!
+  feeds(search: FeedsSearchDto!): TFeeds!
 }
 
 input VersionDto {
@@ -197,8 +246,15 @@ input PostsSearchDto {
   keyword: String
 }
 
+input FeedsSearchDto {
+  pagination: PaginationDto
+  sort: String
+  keyword: String
+}
+
 type Mutation {
   release(arg: ReleaseDto!): TVersion!
+  follow(follow: FollowDto!): TFollow!
   upload(file: Upload!): MediaEntity!
   signup(arg: RegisterDto!): TLogin!
   emailConfirm(email: String!): TForget!
@@ -207,7 +263,9 @@ type Mutation {
   forget(email: String!): TForget!
   resetPassword(arg: ResetPassDto!): UserEntity!
   profileUpdate(arg: ProfileDto!): UserEntity!
+  createPost(post: PostDto!): PostEntity!
   createChat(arg: CreateChatDto!): ChatEntity!
+  createFeed(feed: FeedDto!): FeedEntity!
 }
 
 input ReleaseDto {
@@ -215,6 +273,11 @@ input ReleaseDto {
   image: String
   title: String!
   description: String
+}
+
+input FollowDto {
+  follower: String!
+  following: Boolean!
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -248,9 +311,20 @@ input ProfileDto {
   avatar: String
 }
 
+input PostDto {
+  title: String!
+  description: String
+  photos: [String!]!
+}
+
 input CreateChatDto {
   type: String!
   members: [ID!]!
   title: String!
   description: String!
+}
+
+input FeedDto {
+  caption: String!
+  photos: [String!]!
 }
