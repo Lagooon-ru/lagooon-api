@@ -12,6 +12,9 @@ export class ProfileDto {
   name: string;
 
   @Field({ nullable: true })
+  username: string;
+
+  @Field({ nullable: true })
   bio: string;
 
   @Field({ nullable: true })

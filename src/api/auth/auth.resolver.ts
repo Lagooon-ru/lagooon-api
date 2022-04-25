@@ -24,13 +24,20 @@ export class AuthResolver {
 
   @Mutation(() => TLogin)
   async signup(@GRes() res: any, @Args('arg') signupData: RegisterDto) {
-    const user = await this.authService.validateUserService({
+    let user = await this.authService.validateUserService({
       email: signupData.email,
     });
     if (!user) {
-      const re = await this.authService.signupService(signupData);
-      res.cookie('token', re.access_token);
-      return re;
+      user = await this.authService.validateUserService({
+        username: signupData.username,
+      });
+      if (!user) {
+        const re = await this.authService.signupService(signupData);
+        res.cookie('token', re.access_token);
+        return re;
+      }
+
+      throw new BadRequestException('The username is already exist');
     }
 
     throw new BadRequestException('This email address is already exist');

@@ -16,7 +16,7 @@ import {
 export class FeedResolver {
   constructor(private feedService: FeedService) {}
 
-  @Query(() => TFeeds)
+  @Mutation(() => TFeeds)
   async feeds(@Args('search') search: FeedsSearchDto) {
     return this.feedService.getFeedsService(search);
   }

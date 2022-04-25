@@ -9,7 +9,7 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { MediaService } from '../media/media.service';
 import { FeedCommentEntity, FeedEntity } from './feed.entity';
 import { UserEntity } from '../user/user.entity';
-import { TFeedAddComment, TFeedLike, TFeeds } from './types/object';
+import { TFeedLike, TFeeds } from './types/object';
 import {
   FeedAddCommentDto,
   FeedCreateDto,
@@ -32,9 +32,14 @@ export class FeedService {
     const limit = search.pagination?.limit || 10;
     const page = search.pagination?.page || 0;
     const keyword = search.keyword || '';
+    const author = search.author || '';
     const where: FindManyOptions<UserEntity>['where'] = [];
     if (!!keyword) {
       where.push({ caption: Like(`%${keyword}%`) });
+    }
+
+    if (!!author) {
+      where.push({ author: author });
     }
 
     const [item, count] = await this.feedRepository.findAndCount({

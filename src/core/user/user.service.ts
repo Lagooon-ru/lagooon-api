@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, ILike, Like, Repository } from 'typeorm';
 import { TUsers } from './types/users.type';
 import { UsersSearchDto } from './types/search.type';
 import { MediaService } from '../media/media.service';
@@ -23,10 +23,12 @@ export class UserService {
     const keyword = search.keyword || '';
     const where: FindManyOptions<UserEntity>['where'] = [];
     if (!!keyword) {
-      where.push({ username: Like(`%${keyword}%`) });
-      where.push({ name: Like(`%${keyword}%`) });
-      where.push({ email: Like(`%${keyword}%`) });
+      where.push({ username: ILike(`%${keyword}%`) });
+      where.push({ name: ILike(`%${keyword}%`) });
+      where.push({ email: ILike(`%${keyword}%`) });
     }
+
+    console.log(where);
 
     const [item, count] = await this.userRepository.findAndCount({
       where,
@@ -53,14 +55,14 @@ export class UserService {
       where: {
         id: id,
       },
-      relations: ['follow'],
+      relations: ['follow', 'avatar'],
     });
   }
 
   async getUserByAttrService(attr: any): Promise<UserEntity> {
     return this.userRepository.findOne({
       where: { ...attr },
-      relations: ['follow'],
+      relations: ['follow', 'avatar'],
     });
   }
 
@@ -94,7 +96,7 @@ export class UserService {
   async updateUserService(id: string, data: any) {
     const user = await this.userRepository.findOne({
       where: { id: id },
-      relations: ['follow'],
+      relations: ['follow', 'avatar'],
     });
 
     if (!!data.email) {
@@ -103,6 +105,13 @@ export class UserService {
 
     if (!!data.phone) {
       data.phoneConfirmed = false;
+    }
+
+    if (!!data.avatar) {
+      const image = await this.mediaService.getById(data.avatar);
+      if (!!image) {
+        data.avatar = image;
+      }
     }
 
     return this.userRepository
