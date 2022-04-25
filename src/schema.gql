@@ -261,6 +261,7 @@ type Mutation {
   feedCreate(feed: FeedCreateDto!): FeedEntity!
   feedLike(feed: FeedLikeDto!): TFeedLike!
   feedAddComment(feed: FeedAddCommentDto!): FeedCommentEntity!
+  feedGetComments(feed: FeedGetCommentsDto!): [FeedCommentEntity!]!
 }
 
 input ReleaseDto {
@@ -351,4 +352,8 @@ input FeedAddCommentDto {
   parentId: String
   feedId: String!
   content: String!
+}
+
+input FeedGetCommentsDto {
+  feedId: String!
 }

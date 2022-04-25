@@ -26,6 +26,12 @@ class FeedLikeDto {
 }
 
 @InputType()
+class FeedGetCommentsDto {
+  @Field()
+  feedId: string;
+}
+
+@InputType()
 class FeedAddCommentDto {
   @Field({ nullable: true })
   parentId: string;
@@ -37,4 +43,10 @@ class FeedAddCommentDto {
   content: string;
 }
 
-export { FeedsSearchDto, FeedCreateDto, FeedLikeDto, FeedAddCommentDto };
+export {
+  FeedsSearchDto,
+  FeedCreateDto,
+  FeedLikeDto,
+  FeedGetCommentsDto,
+  FeedAddCommentDto,
+};

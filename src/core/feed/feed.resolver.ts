@@ -8,6 +8,7 @@ import { TFeedAddComment, TFeedLike, TFeeds } from './types/object';
 import {
   FeedAddCommentDto,
   FeedCreateDto,
+  FeedGetCommentsDto,
   FeedLikeDto,
   FeedsSearchDto,
 } from './types/input';
@@ -50,5 +51,10 @@ export class FeedResolver {
     @CurrentUser() author: UserEntity,
   ) {
     return this.feedService.createCommentService(comment, author);
+  }
+
+  @Mutation(() => [FeedCommentEntity])
+  async feedGetComments(@Args('feed') feed: FeedGetCommentsDto) {
+    return this.feedService.feedGetCommentsService(feed);
   }
 }
