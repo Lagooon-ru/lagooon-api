@@ -2,7 +2,10 @@ import { Field, InputType } from '@nestjs/graphql';
 import { SearchDto } from '../../../helper/search.dto';
 
 @InputType()
-class FeedsSearchDto extends SearchDto {}
+class FeedsSearchDto extends SearchDto {
+  @Field({ nullable: true })
+  author: string;
+}
 
 @InputType()
 class FeedCreateDto {

@@ -1,8 +1,8 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { TUsers } from './types/users.type';
-import { UsersSearchDto } from './types/search.type';
+import { UserSearchDto, UsersSearchDto } from './types/search.type';
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { FollowDto, TFollow } from './types/follow.type';
 import { CurrentUser, GqlAuthGuard } from '../../api/auth/guards/graphql.guard';
@@ -11,7 +11,7 @@ import { CurrentUser, GqlAuthGuard } from '../../api/auth/guards/graphql.guard';
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Query(() => TUsers)
+  @Mutation(() => TUsers)
   async users(@Args('search') search: UsersSearchDto): Promise<TUsers> {
     if (search.pagination?.limit > 99) {
       throw new BadRequestException('max limit is 99');
@@ -19,9 +19,9 @@ export class UserResolver {
     return this.userService.getUsersService(search);
   }
 
-  @Query(() => UserEntity)
-  async user(@Args('id') id: string): Promise<UserEntity> {
-    return this.userService.getUserByAttrService({ id: id });
+  @Mutation(() => UserEntity)
+  async user(@Args('search') id: UserSearchDto): Promise<UserEntity> {
+    return this.userService.getUserByAttrService(id);
   }
 
   @Mutation(() => TFollow)

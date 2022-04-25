@@ -5,6 +5,7 @@ import {
   UploadedFile,
   UseGuards,
   Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/api/auth/guards/jwt.guard';
@@ -16,8 +17,11 @@ export class MediaController {
 
   @Post('upload')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('media'))
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
+    if (!file) {
+      throw new BadRequestException('no file');
+    }
     return this.mediaService.uploadService(file, req.user);
   }
 }

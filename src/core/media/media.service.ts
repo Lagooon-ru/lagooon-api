@@ -18,7 +18,6 @@ export class MediaService {
   async uploadService(file, user: UserEntity): Promise<MediaEntity> {
     const newMedia = await this.mediaRepository.create();
     const f = await this.cldService.uploadImage(file);
-    console.log(f);
     const { url, format, bytes, width, height, asset_id, public_id } = f;
     newMedia.path = url;
     newMedia.format = format;
