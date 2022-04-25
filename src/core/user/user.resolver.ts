@@ -30,8 +30,6 @@ export class UserResolver {
     @Args('follow') follower: FollowDto,
     @CurrentUser() user: UserEntity,
   ): Promise<TFollow> {
-    console.log(follower);
-    console.log(user);
     const flr = await this.userService.getProfileService(follower.follower);
     if (!flr) {
       throw new BadRequestException('no exist follower');

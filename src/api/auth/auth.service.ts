@@ -50,11 +50,11 @@ export class AuthService {
     return this.mailService
       .sendUserConfirmationMail(user, newToken)
       .then(() => {
-        return { status: 'true' };
+        return { status: true };
       })
       .catch((e) => {
         console.log(e);
-        return { status: 'false' };
+        return { status: false };
       });
   }
 
