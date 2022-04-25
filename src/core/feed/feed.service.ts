@@ -28,7 +28,6 @@ export class FeedService {
 
   //SEARCH
   async getFeedsService(search: FeedsSearchDto): Promise<TFeeds> {
-    console.log(search);
     const limit = search.pagination?.limit || 10;
     const page = search.pagination?.page || 0;
     const keyword = search.keyword || '';
@@ -89,7 +88,6 @@ export class FeedService {
       newPost.caption = caption;
       newPost.photos = fids;
       newPost.author = author;
-      console.log(newPost);
 
       await this.feedRepository.save(newPost);
       // await this.searchService.indexUser(newUser);
@@ -160,7 +158,6 @@ export class FeedService {
 
   //VALIDATE
   async validate(data: any): Promise<any> {
-    console.log(data);
     try {
       const fd = await this.feedRepository.findOne({
         where: { ...data },
