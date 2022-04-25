@@ -150,6 +150,14 @@ export class FeedService {
     return newComment;
   }
 
+  async feedGetCommentsService(feed): Promise<FeedCommentEntity[]> {
+    return this.feedCommentRepository.find({
+      where: { feed: feed.feedId },
+      order: { createdAt: 'DESC' },
+      relations: ['author', 'author.avatar', 'likes'],
+    });
+  }
+
   //VALIDATE
   async validate(data: any): Promise<any> {
     console.log(data);
