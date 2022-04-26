@@ -249,6 +249,7 @@ type Query {
   story: StoryEntity!
   chats: [ChatEntity!]!
   tildaPages: [TildaEntity!]!
+  tildaPage(arg: TildaPageDto!): TildaEntity!
 }
 
 input VersionDto {
@@ -264,6 +265,10 @@ input PostsSearchDto {
 input PaginationDto {
   limit: Float
   page: Float
+}
+
+input TildaPageDto {
+  id: String!
 }
 
 type Mutation {
@@ -286,7 +291,6 @@ type Mutation {
   feedLike(feed: FeedLikeDto!): TFeedLike!
   feedAddComment(feed: FeedAddCommentDto!): FeedCommentEntity!
   feedGetComments(feed: FeedGetCommentsDto!): [FeedCommentEntity!]!
-  tildaPage(arg: TildaPageDto!): TildaEntity!
   getFromTilda(arg: GetFormTildaDto!): TildaEntity!
 }
 
@@ -382,10 +386,6 @@ input FeedAddCommentDto {
 
 input FeedGetCommentsDto {
   feedId: String!
-}
-
-input TildaPageDto {
-  id: String!
 }
 
 input GetFormTildaDto {
