@@ -12,7 +12,12 @@ export class TildaResolver {
     return this.tildaService.getPagesService();
   }
 
-  @Mutation(() => TildaEntity)
+  // @Mutation(() => TildaEntity)
+  // async tildaPage(@Args('arg') id: TildaPageDto): Promise<TildaEntity> {
+  //   return this.tildaService.getPageService(id.id);
+  // }
+
+  @Query(() => TildaEntity)
   async tildaPage(@Args('arg') id: TildaPageDto): Promise<TildaEntity> {
     return this.tildaService.getPageService(id.id);
   }
