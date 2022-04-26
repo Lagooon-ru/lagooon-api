@@ -37,7 +37,7 @@ class UserEntity extends BaseEntity {
   username: string;
 
   @Field({ nullable: true })
-  @Column({ type: 'varchar', length: 63, nullable: true })
+  @Column({ type: 'varchar', length: 127, nullable: true })
   bio: string;
 
   @Field()

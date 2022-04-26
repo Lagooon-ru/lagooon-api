@@ -8,11 +8,11 @@ type MediaEntity {
   isArchived: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
-  author: UserEntity!
-  asset_id: String!
-  public_id: String!
+  author: UserEntity
+  asset_id: String
+  public_id: String
   path: String!
-  format: String!
+  format: String
   size: String
   height: String
   width: String
