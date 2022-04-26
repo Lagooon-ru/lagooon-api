@@ -21,7 +21,7 @@ class FeedEntity extends BaseEntity {
   author: UserEntity;
 
   @Field()
-  @Column({ type: 'varchar', length: 2055 })
+  @Column({ type: 'varchar', length: 2055, nullable: true })
   caption: string;
 
   @Field(() => [MediaEntity])
