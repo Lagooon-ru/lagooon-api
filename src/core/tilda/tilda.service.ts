@@ -44,6 +44,6 @@ export class TildaService {
   }
 
   async getPageService(id: string): Promise<TildaEntity> {
-    return this.tildaRepository.findOne(id);
+    return this.tildaRepository.findOne({ tildaId: id });
   }
 }
