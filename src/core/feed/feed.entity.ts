@@ -20,8 +20,8 @@ class FeedEntity extends BaseEntity {
   @JoinTable()
   author: UserEntity;
 
-  @Field()
-  @Column({ type: 'varchar', length: 2055 })
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 2055, nullable: true })
   caption: string;
 
   @Field(() => [MediaEntity])
