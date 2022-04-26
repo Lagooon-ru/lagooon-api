@@ -20,7 +20,7 @@ class FeedEntity extends BaseEntity {
   @JoinTable()
   author: UserEntity;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 2055, nullable: true })
   caption: string;
 
