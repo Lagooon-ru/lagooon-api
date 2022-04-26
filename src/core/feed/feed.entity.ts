@@ -5,7 +5,6 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
-  JoinColumn,
 } from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from '../../helper/base.entity';
@@ -21,7 +20,7 @@ class FeedEntity extends BaseEntity {
   author: UserEntity;
 
   @Field({ nullable: true })
-  @Column({ type: 'varchar', length: 2055, nullable: true })
+  @Column({ type: 'varchar', length: 4096, nullable: true })
   caption: string;
 
   @Field(() => [MediaEntity])

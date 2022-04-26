@@ -20,6 +20,7 @@ import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AppEntity } from './app.entity';
 import { FeedModule } from './core/feed/feed.module';
+import { TildaModule } from './core/tilda/tilda.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { FeedModule } from './core/feed/feed.module';
     CloudinaryModule,
     SearchModule,
     FeedModule,
+    TildaModule,
   ],
   controllers: [AppController],
   providers: [AppResolver, AppService],

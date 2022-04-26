@@ -216,6 +216,29 @@ type TFeedLike {
   status: Boolean!
 }
 
+type TildaEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  tildaId: String!
+  projectid: String!
+  title: String
+  descr: String
+  img: String
+  featureimg: String
+  alias: String
+  date: String!
+  sort: String
+  published: String
+  fb_title: String
+  fb_descr: String
+  fb_img: String
+  filename: String!
+  html: String!
+}
+
 type Query {
   versions: [AppEntity!]!
   info(arg: VersionDto!): TVersion!
@@ -225,6 +248,7 @@ type Query {
   stories: StoriesDto!
   story: StoryEntity!
   chats: [ChatEntity!]!
+  tildaPages: [TildaEntity!]!
 }
 
 input VersionDto {
@@ -262,6 +286,8 @@ type Mutation {
   feedLike(feed: FeedLikeDto!): TFeedLike!
   feedAddComment(feed: FeedAddCommentDto!): FeedCommentEntity!
   feedGetComments(feed: FeedGetCommentsDto!): [FeedCommentEntity!]!
+  tildaPage(arg: TildaPageDto!): TildaEntity!
+  getFromTilda(arg: GetFormTildaDto!): TildaEntity!
 }
 
 input ReleaseDto {
@@ -356,4 +382,12 @@ input FeedAddCommentDto {
 
 input FeedGetCommentsDto {
   feedId: String!
+}
+
+input TildaPageDto {
+  id: String!
+}
+
+input GetFormTildaDto {
+  pageId: String!
 }
