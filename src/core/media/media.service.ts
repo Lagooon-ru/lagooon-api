@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MediaEntity } from './media.entity';
@@ -6,6 +6,8 @@ import { MediasDto } from './types/medias.type';
 import { MediasSearchDto } from './types/search.type';
 import { CloudinaryService } from '../../service/cloudinary/cloudinary.service';
 import { UserEntity } from '../user/user.entity';
+import 'dotenv/config';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class MediaService {
@@ -13,9 +15,19 @@ export class MediaService {
     @InjectRepository(MediaEntity)
     private mediaRepository: Repository<MediaEntity>,
     private readonly cldService: CloudinaryService,
+    private readonly httpService: HttpService,
   ) {}
 
   async uploadService(file, user: UserEntity): Promise<MediaEntity> {
+    if (file.mimetype.includes('image')) {
+      const { isForbidden } = await this.checkPron(file);
+      if (isForbidden) {
+        throw new BadRequestException(
+          'Наши алгоритмы определили эту фотографию как небезопасную для загрузки. Наши алгоритмы несовершенны и мы постоянно работаем над их улучшением. Если Вы считаете, что видите это сообщение по ошибке, то свяжитесь с нами, мы обязательно поможем!',
+        );
+      }
+    }
+
     const newMedia = await this.mediaRepository.create();
     const f = await this.cldService.uploadImage(file);
 
@@ -44,5 +56,57 @@ export class MediaService {
 
   async getById(id: string): Promise<MediaEntity> {
     return this.mediaRepository.findOne(id);
+  }
+
+  async checkPron(file: any) {
+    try {
+      const getTokenUrl = `https://iam.api.cloud.yandex.net/iam/v1/tokens`;
+      const checkUrl = `https://vision.api.cloud.yandex.net/vision/v1/batchAnalyze`;
+
+      const res = await this.httpService
+        .post(getTokenUrl, { yandexPassportOauthToken: process.env.YANDEX_KEY })
+        .toPromise();
+
+      const { data } = await this.httpService
+        .post(
+          checkUrl,
+          {
+            folderId: 'b1g4be97mmeq1hch19vg',
+            analyze_specs: [
+              {
+                content: file.buffer.toString('base64'),
+                features: [
+                  {
+                    type: 'CLASSIFICATION',
+                    classificationConfig: {
+                      model: 'moderation',
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${res.data.iamToken}`,
+            },
+          },
+        )
+        .toPromise();
+      const adultRank =
+        data.results[0].results[0].classification.properties[0].probability;
+
+      console.log(adultRank);
+
+      if (adultRank > 0.75) {
+        return { adultRank, isForbidden: true };
+      } else {
+        return { adultRank, isForbidden: false };
+      }
+    } catch (e) {
+      console.log(e);
+      return { adultRank: -1, isForbidden: false };
+    }
   }
 }
