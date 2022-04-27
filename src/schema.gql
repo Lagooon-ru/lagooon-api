@@ -277,6 +277,7 @@ type Mutation {
   user(search: UserSearchDto!): UserEntity!
   follow(follow: FollowDto!): TFollow!
   upload(file: Upload!): MediaEntity!
+  saveVideo(file: Upload!): MediaEntity!
   signup(arg: RegisterDto!): TLogin!
   emailConfirm(email: String!): TForget!
   login(arg: LoginDto!): TLogin!

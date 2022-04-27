@@ -8,6 +8,7 @@ import { CloudinaryService } from '../../service/cloudinary/cloudinary.service';
 import { UserEntity } from '../user/user.entity';
 import 'dotenv/config';
 import { HttpService } from '@nestjs/axios';
+import { uploadFile } from 'src/helper/file-upload';
 
 @Injectable()
 export class MediaService {
@@ -42,6 +43,11 @@ export class MediaService {
     newMedia.author = user;
 
     return this.mediaRepository.save(newMedia);
+  }
+
+  async uploadVideo(file: any, user: UserEntity): Promise<MediaEntity> {
+    const url = await uploadFile(file);
+    return await this.mediaRepository.save({ path: url, author: user });
   }
 
   async getMedias(search: MediasSearchDto): Promise<MediasDto> {
