@@ -7,7 +7,7 @@ export class MailService {
   constructor(private mailerService: MailerService) {}
 
   async sendUserConfirmationMail(user: UserEntity, token: string) {
-    const url = `${process.env.FRONTEND_URL}/auth/email/${token}`;
+    const url = `${process.env.FRONTEND_URL}/confirm?token=${token}`;
     return await this.mailerService.sendMail({
       from: `"Lagooon" <${process.env.MAIL_FROM}>`,
       to: user.email,
