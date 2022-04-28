@@ -5,6 +5,7 @@ import {
   OneToMany,
   ManyToOne,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from '../../helper/base.entity';
@@ -15,7 +16,8 @@ import { UserEntity } from '../user/user.entity';
 @Entity({ name: 'posts' })
 class PostEntity extends BaseEntity {
   @Field(() => UserEntity)
-  @OneToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinTable()
   author: UserEntity;
 
   @Field()
