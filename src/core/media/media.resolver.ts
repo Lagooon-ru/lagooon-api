@@ -22,14 +22,14 @@ export class MediaResolver {
     return this.mediaService.uploadService(file, user);
   }
 
-  @Mutation(() => MediaEntity)
-  async saveVideo(
-    @Args({ name: 'file', type: () => GraphQLUpload })
-    file: Express.Multer.File,
-    @CurrentUser() user: UserEntity,
-  ): Promise<MediaEntity> {
-    return this.mediaService.uploadVideo(file, user);
-  }
+  // @Mutation(() => MediaEntity)
+  // async saveVideo(
+  //   @Args({ name: 'file', type: () => GraphQLUpload })
+  //   file: Express.Multer.File,
+  //   @CurrentUser() user: UserEntity,
+  // ): Promise<MediaEntity> {
+  //   return this.mediaService.uploadVideo(file, user);
+  // }
 
   @Query(() => MediasDto)
   async medias(search: MediasSearchDto) {

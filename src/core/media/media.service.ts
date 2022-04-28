@@ -45,9 +45,20 @@ export class MediaService {
     return this.mediaRepository.save(newMedia);
   }
 
-  async uploadVideo(file: any, user: UserEntity): Promise<MediaEntity> {
-    const url = await uploadFile(file);
-    return await this.mediaRepository.save({ path: url, author: user });
+  async uploadVideo(files: any, user: UserEntity): Promise<MediaEntity[]> {
+    const result: MediaEntity[] = [];
+
+    for (const file of files) {
+      const url = await uploadFile(file);
+      const fileUpload = await this.mediaRepository.save({
+        path: url,
+        author: user,
+        size: file.size,
+        format: file.mimetype,
+      });
+      result.push(fileUpload);
+    }
+    return result;
   }
 
   async getMedias(search: MediasSearchDto): Promise<MediasDto> {
