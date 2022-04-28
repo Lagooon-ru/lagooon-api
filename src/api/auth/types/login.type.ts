@@ -35,3 +35,9 @@ export class TForget {
   @Field()
   status: boolean;
 }
+
+@ObjectType()
+export class TEmailConfirm {
+  @Field()
+  status: boolean;
+}
