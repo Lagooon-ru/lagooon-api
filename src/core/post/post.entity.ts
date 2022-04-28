@@ -20,16 +20,16 @@ class PostEntity extends BaseEntity {
   @JoinTable()
   author: UserEntity;
 
-  @Field({ nullable: true })
-  @Column({ type: 'varchar', length: 255 })
+  @Field()
+  @Column({ type: 'varchar', length: 255, nullable: true })
   title: string;
 
-  @Field({ nullable: true })
-  @Column({ type: 'varchar', length: 255 })
+  @Field()
+  @Column({ type: 'varchar', length: 255, nullable: true })
   description: string;
 
-  @Field({ nullable: true })
-  @Column({ type: 'varchar', length: 255 })
+  @Field()
+  @Column({ type: 'varchar', length: 255, nullable: true })
   type: string;
 
   @Field(() => [MediaEntity])
@@ -45,7 +45,7 @@ class PostEntity extends BaseEntity {
   score: number;
 
   @Field()
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   size: string;
 
   @Field(() => [PostCommentEntity])
