@@ -272,6 +272,7 @@ type Query {
   storyGetComments(arg: StoryGetCommentsDto!): [StoryCommentEntity!]!
   chats: [ChatEntity!]!
   tildaPages: [TildaEntity!]!
+  tildaPage(arg: TildaPageDto!): TildaEntity!
 }
 
 input VersionDto {
@@ -289,6 +290,7 @@ input PaginationDto {
   page: Float
 }
 
+<<<<<<< HEAD
 input StoriesDto {
   pagination: PaginationDto
   sort: String
@@ -304,6 +306,9 @@ input StoriesOfUserDto {
 }
 
 input StoryGetCommentsDto {
+=======
+input TildaPageDto {
+>>>>>>> 5fecae9eb23f1015af14d850adc4b1d0b032a398
   id: String!
 }
 
@@ -313,6 +318,7 @@ type Mutation {
   user(search: UserSearchDto!): UserEntity!
   follow(follow: FollowDto!): TFollow!
   upload(file: Upload!): MediaEntity!
+  saveVideo(file: Upload!): MediaEntity!
   signup(arg: RegisterDto!): TLogin!
   emailConfirm(email: String!): TForget!
   emailConfirmAction(arg: EmailConformActionDto!): TEmailConfirm!
@@ -332,7 +338,6 @@ type Mutation {
   feedLike(feed: FeedLikeDto!): TFeedLike!
   feedAddComment(feed: FeedAddCommentDto!): FeedCommentEntity!
   feedGetComments(feed: FeedGetCommentsDto!): [FeedCommentEntity!]!
-  tildaPage(arg: TildaPageDto!): TildaEntity!
   getFromTilda(arg: GetFormTildaDto!): TildaEntity!
 }
 
@@ -454,10 +459,6 @@ input FeedAddCommentDto {
 
 input FeedGetCommentsDto {
   feedId: String!
-}
-
-input TildaPageDto {
-  id: String!
 }
 
 input GetFormTildaDto {

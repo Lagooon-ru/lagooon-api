@@ -10,10 +10,13 @@ import { Readable } from 'stream';
 export class CloudinaryService {
   async uploadImage(file): Promise<UploadApiResponse | UploadApiErrorResponse> {
     return new Promise((resolve, reject) => {
-      const upload = Cld.uploader.upload_stream((error, result) => {
-        if (error) return reject(error);
-        resolve(result);
-      });
+      const upload = Cld.uploader.upload_stream(
+        { resource_type: 'auto' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
 
       Readable.from(file.buffer).pipe(upload);
     });
