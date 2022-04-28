@@ -20,15 +20,15 @@ class PostEntity extends BaseEntity {
   @JoinTable()
   author: UserEntity;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 255 })
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 255 })
   description: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 255 })
   type: string;
 
@@ -40,7 +40,7 @@ class PostEntity extends BaseEntity {
   @ManyToMany(() => UserEntity, (user) => user.id)
   likes: UserEntity[];
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ default: 0 })
   score: number;
 
