@@ -1,13 +1,17 @@
 import { Module } from '@nestjs/common';
-import { StoryController } from './story.controller';
 import { StoryService } from './story.service';
 import { StoryResolver } from './story.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StoryEntity } from './story.entity';
+import { StoryCommentEntity, StoryEntity } from './story.entity';
+import { UserModule } from '../user/user.module';
+import { MediaModule } from '../media/media.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StoryEntity])],
-  controllers: [StoryController],
+  imports: [
+    TypeOrmModule.forFeature([StoryEntity, StoryCommentEntity]),
+    UserModule,
+    MediaModule,
+  ],
   providers: [StoryService, StoryResolver],
 })
 export class StoryModule {}

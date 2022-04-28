@@ -37,3 +37,9 @@ export class RegisterDto {
   @Field({ nullable: false })
   password: string;
 }
+
+@InputType()
+export class EmailConformActionDto {
+  @Field()
+  token: string;
+}
