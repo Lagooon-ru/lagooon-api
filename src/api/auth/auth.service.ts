@@ -58,7 +58,7 @@ export class AuthService {
       });
   }
 
-  async emailConfirmService(token: string): Promise<boolean> {
+  async emailConfirmService(token: string): Promise<UserEntity | boolean> {
     const user = await this.userService.getUserByAttrService({ vToken: token });
     if (!user) {
       return false;

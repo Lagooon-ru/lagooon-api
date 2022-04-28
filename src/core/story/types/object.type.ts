@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { TPagination } from '../../../helper/pagination.dto';
 import { StoryEntity } from '../story.entity';
+import { TPagination } from '../../../helper/pagination.dto';
 
 @ObjectType()
-class StoriesDto {
+class TStories {
   @Field(() => [StoryEntity])
   data: StoryEntity[];
 
@@ -11,4 +11,10 @@ class StoriesDto {
   pagination: TPagination;
 }
 
-export { StoriesDto };
+@ObjectType()
+class TStoryLike {
+  @Field()
+  status: boolean;
+}
+
+export { TStories, TStoryLike };

@@ -1,13 +1,22 @@
 import {
   BadRequestException,
+  Get,
+  Param,
+  Render,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { CurrentUser, GqlAuthGuard, GRes } from './guards/graphql.guard';
-import { RegisterDto } from './types/register.type';
-import { LoginDto, TForget, TLogin, TLogout } from './types/login.type';
+import { EmailConformActionDto, RegisterDto } from './types/register.type';
+import {
+  LoginDto,
+  TEmailConfirm,
+  TForget,
+  TLogin,
+  TLogout,
+} from './types/login.type';
 import { UserEntity } from '../../core/user/user.entity';
 import { ResetPassDto } from './types/reset.type';
 import { ProfileDto } from './types/profile.type';
@@ -52,6 +61,16 @@ export class AuthResolver {
     }
 
     throw new BadRequestException('This email address is not registered.');
+  }
+
+  @Mutation(() => TEmailConfirm)
+  async emailConfirmAction(@Args('arg') arg: EmailConformActionDto) {
+    const result = await this.authService.emailConfirmService(arg.token);
+    if (result) {
+      return { status: true };
+    } else {
+      return { status: false };
+    }
   }
 
   @Mutation(() => TLogin)

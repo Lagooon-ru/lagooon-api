@@ -99,6 +99,10 @@ type TForget {
   status: Boolean!
 }
 
+type TEmailConfirm {
+  status: Boolean!
+}
+
 type PostEntity {
   id: String!
   isActive: Boolean!
@@ -139,18 +143,34 @@ type StoryEntity {
   isArchived: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
-  author: String!
-  title: String!
-  description: String!
-  type: String!
-  tags: [String!]!
-  photos: [MediaEntity!]!
-  size: String!
+  author: UserEntity!
+  caption: String
+  photo: MediaEntity!
+  likes: [UserEntity!]!
+  comments: [StoryCommentEntity!]!
+  score: Float!
 }
 
-type StoriesDto {
+type StoryCommentEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  story: StoryEntity!
+  author: UserEntity!
+  parent: StoryCommentEntity!
+  likes: [UserEntity!]!
+  comment: String!
+}
+
+type TStories {
   data: [StoryEntity!]!
   pagination: TPagination!
+}
+
+type TStoryLike {
+  status: Boolean!
 }
 
 type AppEntity {
@@ -245,8 +265,11 @@ type Query {
   medias: MediasDto!
   profile: UserEntity!
   posts(search: PostsSearchDto!): PostsDto!
-  stories: StoriesDto!
-  story: StoryEntity!
+  stories(arg: StoriesDto!): TStories!
+  story(arg: StoryDto!): StoryEntity!
+  storyOfMe: StoryEntity!
+  storyOfUser(arg: StoriesOfUserDto!): StoryEntity!
+  storyGetComments(arg: StoryGetCommentsDto!): [StoryCommentEntity!]!
   chats: [ChatEntity!]!
   tildaPages: [TildaEntity!]!
   tildaPage(arg: TildaPageDto!): TildaEntity!
@@ -267,7 +290,25 @@ input PaginationDto {
   page: Float
 }
 
+<<<<<<< HEAD
+input StoriesDto {
+  pagination: PaginationDto
+  sort: String
+  keyword: String
+}
+
+input StoryDto {
+  id: String!
+}
+
+input StoriesOfUserDto {
+  id: String!
+}
+
+input StoryGetCommentsDto {
+=======
 input TildaPageDto {
+>>>>>>> 5fecae9eb23f1015af14d850adc4b1d0b032a398
   id: String!
 }
 
@@ -280,12 +321,17 @@ type Mutation {
   saveVideo(file: Upload!): MediaEntity!
   signup(arg: RegisterDto!): TLogin!
   emailConfirm(email: String!): TForget!
+  emailConfirmAction(arg: EmailConformActionDto!): TEmailConfirm!
   login(arg: LoginDto!): TLogin!
   logout: TLogout!
   forget(email: String!): TForget!
   resetPassword(arg: ResetPassDto!): UserEntity!
   profileUpdate(arg: ProfileDto!): UserEntity!
   createPost(post: PostDto!): PostEntity!
+  storyCreate(arg: StoryCreateDto!): StoryEntity!
+  storyUpdate(arg: StoryUpdateDto!): StoryEntity!
+  storyLike(arg: StoryLikeDto!): TStoryLike!
+  storyAddComment(arg: StoryAddCommentDto!): StoryCommentEntity!
   createChat(arg: CreateChatDto!): ChatEntity!
   feeds(search: FeedsSearchDto!): TFeeds!
   feedCreate(feed: FeedCreateDto!): FeedEntity!
@@ -329,6 +375,10 @@ input RegisterDto {
   password: String!
 }
 
+input EmailConformActionDto {
+  token: String!
+}
+
 input LoginDto {
   user: String!
   password: String!
@@ -353,6 +403,28 @@ input PostDto {
   title: String!
   description: String
   photos: [String!]!
+}
+
+input StoryCreateDto {
+  caption: String
+  photo: String!
+}
+
+input StoryUpdateDto {
+  id: String!
+  caption: String
+  photo: String
+}
+
+input StoryLikeDto {
+  id: String!
+  action: Boolean!
+}
+
+input StoryAddCommentDto {
+  parentId: String
+  storyId: String!
+  content: String!
 }
 
 input CreateChatDto {
