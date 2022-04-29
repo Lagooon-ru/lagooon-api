@@ -4,10 +4,11 @@ import { FeedResolver } from './feed.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MediaModule } from '../media/media.module';
 import { FeedCommentEntity, FeedEntity } from './feed.entity';
+import { FeedRepository } from './feed.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([FeedEntity]),
+    TypeOrmModule.forFeature([FeedRepository]),
     TypeOrmModule.forFeature([FeedCommentEntity]),
     MediaModule,
   ],

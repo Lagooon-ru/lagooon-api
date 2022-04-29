@@ -12,6 +12,7 @@ import {
   FeedLikeDto,
   FeedsSearchDto,
 } from './types/input';
+import { PaginationDto } from 'src/helper/pagination.dto';
 
 @Resolver()
 export class FeedResolver {
@@ -20,6 +21,15 @@ export class FeedResolver {
   @Mutation(() => TFeeds)
   async feeds(@Args('search') search: FeedsSearchDto) {
     return this.feedService.getFeedsService(search);
+  }
+
+  @Query(() => [FeedEntity])
+  @UseGuards(GqlAuthGuard)
+  async getOwnFeeds(
+    @Args('params') params: PaginationDto,
+    @CurrentUser() author: UserEntity,
+  ) {
+    return await this.feedService.getOwn(params, author);
   }
 
   @Mutation(() => FeedEntity)
