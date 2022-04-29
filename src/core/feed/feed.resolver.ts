@@ -25,6 +25,12 @@ export class FeedResolver {
 
   @Query(() => [FeedEntity])
   @UseGuards(GqlAuthGuard)
+  async getFeeds(@Args('params') params: PaginationDto) {
+    return this.feedService.getAll(params);
+  }
+
+  @Query(() => [FeedEntity])
+  @UseGuards(GqlAuthGuard)
   async getOwnFeeds(
     @Args('params') params: PaginationDto,
     @CurrentUser() author: UserEntity,

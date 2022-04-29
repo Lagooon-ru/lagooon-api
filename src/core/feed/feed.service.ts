@@ -178,7 +178,10 @@ export class FeedService {
     params: PaginationDto,
     author: UserEntity,
   ): Promise<FeedEntity[]> {
-    const s = await this.feedRepository.getOwn(params, author);
-    return s;
+    return await this.feedRepository.getOwn(params, author);
+  }
+
+  async getAll(params: PaginationDto): Promise<FeedEntity[]> {
+    return await this.feedRepository.getAll(params);
   }
 }
