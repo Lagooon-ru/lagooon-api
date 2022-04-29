@@ -22,7 +22,7 @@ export class RegisterDto {
   @IsString()
   @MinLength(5)
   @MaxLength(30)
-  @Field({ nullable: false })
+  @Field({ nullable: true })
   username: string;
 
   @IsNotEmpty()
