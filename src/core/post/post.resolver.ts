@@ -4,18 +4,44 @@ import { PostService } from './post.service';
 import { PostDto } from './types/create.type';
 import { PostsDto } from './types/posts.type';
 import { PostsSearchDto } from './types/search.type';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard, CurrentUser } from 'src/api/auth/guards/graphql.guard';
+import { UserEntity } from '../user/user.entity';
+import { TDelete } from './types/delete.type';
+import { PostGuard } from './guard/post.guard';
+import { UpdatePostDto } from './types/update.type';
 
 @Resolver()
 export class PostResolver {
   constructor(private postService: PostService) {}
 
   @Query(() => PostsDto)
+  @UseGuards(GqlAuthGuard)
   async posts(@Args('search') search: PostsSearchDto) {
     return this.postService.getPosts(search);
   }
 
   @Mutation(() => PostEntity)
-  async createPost(@Args('post') post: PostDto) {
-    return this.postService.createPost(post);
+  @UseGuards(GqlAuthGuard)
+  async createPost(
+    @Args('post') post: PostDto,
+    @CurrentUser() author: UserEntity,
+  ) {
+    return this.postService.createPost(post, author);
+  }
+
+  @Mutation(() => PostEntity)
+  @UseGuards(GqlAuthGuard, PostGuard)
+  async updatePost(
+    @Args('postId') postId: string,
+    @Args('input') post: UpdatePostDto,
+  ) {
+    return this.postService.update(postId, post);
+  }
+
+  @Mutation(() => TDelete)
+  @UseGuards(GqlAuthGuard, PostGuard)
+  async deletePost(@Args('postId') postId: string) {
+    return this.postService.delete(postId);
   }
 }
