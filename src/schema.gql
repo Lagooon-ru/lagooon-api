@@ -277,7 +277,7 @@ type Query {
   storyOfUser(arg: StoriesOfUserDto!): StoryEntity!
   storyGetComments(arg: StoryGetCommentsDto!): [StoryCommentEntity!]!
   chats: [ChatEntity!]!
-  getFeeds(params: PaginationDto!): [FeedEntity!]!
+  getFeeds(params: PaginationDto!): [PostEntity!]!
   getOwnFeeds(params: PaginationDto!): [FeedEntity!]!
   tildaPages: [TildaEntity!]!
   tildaPage(arg: TildaPageDto!): TildaEntity!
