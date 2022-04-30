@@ -46,6 +46,10 @@ export class PostService {
     };
   }
 
+  getUserPosts(author: UserEntity) {
+    return this.postRepository.find({ author });
+  }
+
   async createPost(post: PostDto, author: UserEntity): Promise<PostEntity> {
     const { title, description, photos } = post;
 

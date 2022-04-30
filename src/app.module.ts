@@ -33,7 +33,8 @@ import { TildaModule } from './core/tilda/tilda.module';
         password: process.env.POSTGRES_PASSWORD,
         database: process.env.POSTGRES_DATABASE,
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        //TODO: return sync true
+        synchronize: false,
         autoLoadEntities: true,
       }),
     }),

@@ -12,5 +12,6 @@ import { MediaModule } from '../media/media.module';
     MediaModule,
   ],
   providers: [PostService, PostResolver],
+  exports: [PostService],
 })
 export class PostModule {}
