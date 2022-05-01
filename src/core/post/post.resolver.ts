@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
 import { PostEntity } from './post.entity';
 import { PostService } from './post.service';
 import { PostDto } from './types/create.type';
@@ -10,10 +10,15 @@ import { UserEntity } from '../user/user.entity';
 import { TDelete } from './types/delete.type';
 import { PostGuard } from './guard/post.guard';
 import { UpdatePostDto } from './types/update.type';
+import { MediaService } from '../media/media.service';
+import { MediaEntity } from '../media/media.entity';
 
-@Resolver()
+@Resolver(() => PostEntity)
 export class PostResolver {
-  constructor(private postService: PostService) {}
+  constructor(
+    private postService: PostService,
+    private mediaService: MediaService,
+  ) {}
 
   @Query(() => PostsDto)
   @UseGuards(GqlAuthGuard)
@@ -43,5 +48,10 @@ export class PostResolver {
   @UseGuards(GqlAuthGuard, PostGuard)
   async deletePost(@Args('postId') postId: string) {
     return this.postService.delete(postId);
+  }
+
+  @ResolveField('photos', () => [MediaEntity])
+  async photos(@Parent() post: PostEntity) {
+    return this.mediaService.getByIds(post.photoIds);
   }
 }

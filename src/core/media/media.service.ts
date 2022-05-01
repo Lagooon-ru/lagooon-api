@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {In, Repository} from 'typeorm';
 import { MediaEntity } from './media.entity';
 import { MediasDto } from './types/medias.type';
 import { MediasSearchDto } from './types/search.type';
@@ -73,6 +73,10 @@ export class MediaService {
 
   async getById(id: string): Promise<MediaEntity> {
     return this.mediaRepository.findOne(id);
+  }
+
+  getByIds(ids: string[]): Promise<MediaEntity[]> {
+    return this.mediaRepository.find({ id: In(ids) });
   }
 
   async checkPron(file: any) {
