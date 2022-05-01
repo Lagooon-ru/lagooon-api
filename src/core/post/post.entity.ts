@@ -32,9 +32,13 @@ class PostEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   type: string;
 
-  @Field(() => [MediaEntity])
-  @OneToMany(() => MediaEntity, (photo) => photo.id)
-  photos: MediaEntity[];
+  @Field(() => [String])
+  @Column('text', { array: true })
+  photoIds: string[];
+
+  // @Field(() => [MediaEntity])
+  // @OneToMany(() => MediaEntity, (photo) => photo.id)
+  // photos: MediaEntity[];
 
   @Field(() => [UserEntity])
   @ManyToMany(() => UserEntity, (user) => user.id)

@@ -47,7 +47,9 @@ export class PostService {
   }
 
   getUserPosts(author: UserEntity) {
-    return this.postRepository.find({ author });
+    return this.postRepository.find({
+      where: { author },
+    });
   }
 
   async createPost(post: PostDto, author: UserEntity): Promise<PostEntity> {
@@ -67,8 +69,9 @@ export class PostService {
 
       newPost.title = title;
       newPost.description = description;
-      newPost.photos = pIds;
+      // newPost.photos = pIds;
       newPost.author = author;
+      newPost.photoIds = photos;
       await this.postRepository.save(newPost);
       // await this.searchService.indexUser(newUser);
       return newPost;

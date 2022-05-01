@@ -92,11 +92,12 @@ type PostEntity {
   title: String!
   description: String!
   type: String!
-  photos: [MediaEntity!]!
+  photoIds: [String!]!
   likes: [UserEntity!]!
   score: Float
   size: String!
   comments: [PostCommentEntity!]!
+  photos: [MediaEntity!]!
 }
 
 type PostCommentEntity {
