@@ -265,10 +265,8 @@ type Query {
   medias: MediasDto!
   profile: UserEntity!
   posts(search: PostsSearchDto!): PostsDto!
-  stories(arg: StoriesDto!): TStories!
   story(arg: StoryDto!): StoryEntity!
-  storyOfMe: StoryEntity!
-  storyOfUser(arg: StoriesOfUserDto!): StoryEntity!
+  storyOfMe: [StoryEntity!]!
   storyGetComments(arg: StoryGetCommentsDto!): [StoryCommentEntity!]!
   chats: [ChatEntity!]!
   tildaPages: [TildaEntity!]!
@@ -290,30 +288,21 @@ input PaginationDto {
   page: Float
 }
 
-<<<<<<< HEAD
-input StoriesDto {
-  pagination: PaginationDto
-  sort: String
-  keyword: String
-}
-
 input StoryDto {
   id: String!
 }
 
-input StoriesOfUserDto {
+input StoryGetCommentsDto {
   id: String!
 }
 
-input StoryGetCommentsDto {
-=======
 input TildaPageDto {
->>>>>>> 5fecae9eb23f1015af14d850adc4b1d0b032a398
   id: String!
 }
 
 type Mutation {
   release(arg: ReleaseDto!): TVersion!
+  allUsers: [UserEntity!]!
   users(search: UsersSearchDto!): TUsers!
   user(search: UserSearchDto!): UserEntity!
   follow(follow: FollowDto!): TFollow!
@@ -328,6 +317,8 @@ type Mutation {
   resetPassword(arg: ResetPassDto!): UserEntity!
   profileUpdate(arg: ProfileDto!): UserEntity!
   createPost(post: PostDto!): PostEntity!
+  stories(arg: StoriesDto!): TStories!
+  storyOfUser(arg: StoriesOfUserDto!): [StoryEntity!]!
   storyCreate(arg: StoryCreateDto!): StoryEntity!
   storyUpdate(arg: StoryUpdateDto!): StoryEntity!
   storyLike(arg: StoryLikeDto!): TStoryLike!
@@ -403,6 +394,16 @@ input PostDto {
   title: String!
   description: String
   photos: [String!]!
+}
+
+input StoriesDto {
+  pagination: PaginationDto
+  sort: String
+  keyword: String
+}
+
+input StoriesOfUserDto {
+  id: String!
 }
 
 input StoryCreateDto {

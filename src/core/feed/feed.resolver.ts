@@ -1,10 +1,10 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { FeedService } from './feed.service';
 import { FeedCommentEntity, FeedEntity } from './feed.entity';
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { CurrentUser, GqlAuthGuard } from '../../api/auth/guards/graphql.guard';
 import { UserEntity } from '../user/user.entity';
-import { TFeedAddComment, TFeedLike, TFeeds } from './types/object';
+import { TFeedLike, TFeeds } from './types/object';
 import {
   FeedAddCommentDto,
   FeedCreateDto,
@@ -18,8 +18,12 @@ export class FeedResolver {
   constructor(private feedService: FeedService) {}
 
   @Mutation(() => TFeeds)
-  async feeds(@Args('search') search: FeedsSearchDto) {
-    return this.feedService.getFeedsService(search);
+  @UseGuards(GqlAuthGuard)
+  async feeds(
+    @Args('search') search: FeedsSearchDto,
+    @CurrentUser() user: UserEntity,
+  ) {
+    return this.feedService.getFeedsService(search, user);
   }
 
   @Mutation(() => FeedEntity)

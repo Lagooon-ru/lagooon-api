@@ -31,7 +31,6 @@ export class RegisterDto {
   email: string;
 
   @IsNotEmpty()
-  @IsString()
   @MinLength(8)
   @MaxLength(100)
   @Field({ nullable: false })

@@ -1,8 +1,5 @@
 import {
   BadRequestException,
-  Get,
-  Param,
-  Render,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';

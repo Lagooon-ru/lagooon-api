@@ -24,7 +24,7 @@ export class StoryResolver {
     private readonly userService: UserService,
   ) {}
 
-  @Query(() => TStories)
+  @Mutation(() => TStories)
   async stories(@Args('arg') search: StoriesDto): Promise<TStories> {
     return this.storyService.getStoriesService(search);
   }
@@ -34,13 +34,13 @@ export class StoryResolver {
     return this.storyService.getStoryService(story);
   }
 
-  @Query(() => StoryEntity)
+  @Query(() => [StoryEntity])
   @UseGuards(GqlAuthGuard)
   async storyOfMe(@CurrentUser() user: UserEntity): Promise<StoryEntity[]> {
     return this.storyService.getMyStoryService(user);
   }
 
-  @Query(() => StoryEntity)
+  @Mutation(() => [StoryEntity])
   async storyOfUser(
     @Args('arg') req: StoriesOfUserDto,
   ): Promise<StoryEntity[]> {
