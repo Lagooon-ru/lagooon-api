@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, ILike, Like, Repository } from 'typeorm';
 import { MediaService } from '../media/media.service';
 import { FeedCommentEntity, FeedEntity } from './feed.entity';
 import { UserEntity } from '../user/user.entity';
@@ -15,8 +15,10 @@ import {
   FeedCreateDto,
   FeedsSearchDto,
 } from './types/input';
+import { UserService } from '../user/user.service';
 import { PaginationDto } from 'src/helper/pagination.dto';
 import { FeedRepository } from './feed.repository';
+
 
 @Injectable()
 export class FeedService {
@@ -25,10 +27,21 @@ export class FeedService {
     @InjectRepository(FeedCommentEntity)
     private feedCommentRepository: Repository<FeedCommentEntity>,
     private readonly mediaService: MediaService,
+    private readonly userService: UserService,
   ) {}
 
   //SEARCH
-  async getFeedsService(search: FeedsSearchDto): Promise<TFeeds> {
+  async getFeedsService(
+    search: FeedsSearchDto,
+    user: UserEntity,
+  ): Promise<TFeeds> {
+    const allUsers = await this.userService.getAllUserService();
+    const followers = [];
+    allUsers.map((i) => {
+      if (i.follow.filter((j) => j.id === user.id).length > 0) {
+        followers.push(i);
+      }
+    });
     const limit = search.pagination?.limit || 10;
     const page = search.pagination?.page || 0;
     const keyword = search.keyword || '';
@@ -37,9 +50,16 @@ export class FeedService {
     if (!!keyword) {
       where.push({ caption: Like(`%${keyword}%`) });
     }
+    console.log(followers.length);
 
     if (!!author) {
-      where.push({ author: author });
+      const au = await this.userService.getUserByAttrService({ id: author });
+      where.push({ author: au });
+    } else {
+      where.push({ author: user });
+      followers.map((follower) => {
+        where.push({ author: follower });
+      });
     }
 
     const [item, count] = await this.feedRepository.findAndCount({

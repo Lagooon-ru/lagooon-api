@@ -10,6 +10,7 @@ import { LoginDto, TLogin } from './types/login.type';
 import { MailService } from '../../service/mail/mail.service';
 import { createToken } from '../../helper/token.helper';
 import { ProfileDto } from './types/profile.type';
+import { MediaService } from '../../core/media/media.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
+    private readonly mediaService: MediaService,
   ) {}
 
   async getProfile(id: string): Promise<UserEntity> {
@@ -27,6 +29,10 @@ export class AuthService {
   async signupService(dat: any): Promise<TLogin> {
     const pwd = encryptString(dat.password);
     const token = createToken();
+
+    if (!!dat.avatar) {
+      dat.avatar = await this.mediaService.getById(dat.avatar);
+    }
 
     const user: UserEntity = await this.userService.createUserService({
       ...dat,

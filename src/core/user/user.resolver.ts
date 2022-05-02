@@ -6,6 +6,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { TUsers } from './types/users.type';
@@ -23,7 +24,14 @@ export class UserResolver {
     private postService: PostService,
   ) {}
 
+  @Mutation(() => [UserEntity])
+  @UseGuards(GqlAuthGuard)
+  async allUsers(): Promise<UserEntity[]> {
+    return this.userService.getAllUserService();
+  }
+
   @Mutation(() => TUsers)
+  @UseGuards(GqlAuthGuard)
   async users(@Args('search') search: UsersSearchDto): Promise<TUsers> {
     if (search.pagination?.limit > 99) {
       throw new BadRequestException('max limit is 99');
@@ -31,7 +39,9 @@ export class UserResolver {
     return this.userService.getUsersService(search);
   }
 
+
   @Query(() => UserEntity)
+  @UseGuards(GqlAuthGuard)
   async user(@Args('search') id: UserSearchDto): Promise<UserEntity> {
     return this.userService.getUserByAttrService(id);
   }

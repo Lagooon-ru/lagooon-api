@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { FindManyOptions, ILike, Like, Repository } from 'typeorm';
+import { FindManyOptions, ILike, Repository } from 'typeorm';
 import { TUsers } from './types/users.type';
 import { UsersSearchDto } from './types/search.type';
 import { MediaService } from '../media/media.service';
@@ -16,6 +16,12 @@ export class UserService {
     private readonly mediaService: MediaService,
     private readonly searchService: SearchService,
   ) {}
+
+  async getAllUserService(): Promise<UserEntity[]> {
+    return this.userRepository.find({
+      relations: ['follow', 'avatar'],
+    });
+  }
 
   async getUsersService(search: UsersSearchDto): Promise<TUsers> {
     const limit = search.pagination?.limit || 10;
@@ -32,7 +38,7 @@ export class UserService {
 
     const [item, count] = await this.userRepository.findAndCount({
       where,
-      relations: ['follow'],
+      relations: ['follow', 'avatar', 'follow.avatar'],
       order: {
         id: 'ASC',
       },
@@ -55,14 +61,14 @@ export class UserService {
       where: {
         id: id,
       },
-      relations: ['follow', 'avatar'],
+      relations: ['follow', 'avatar', 'follow.avatar'],
     });
   }
 
   async getUserByAttrService(attr: any): Promise<UserEntity> {
     return this.userRepository.findOne({
       where: { ...attr },
-      relations: ['follow', 'avatar'],
+      relations: ['follow', 'follow.avatar', 'avatar'],
     });
   }
 
@@ -96,7 +102,7 @@ export class UserService {
   async updateUserService(id: string, data: any) {
     const user = await this.userRepository.findOne({
       where: { id: id },
-      relations: ['follow', 'avatar'],
+      relations: ['follow', 'avatar', 'follow.avatar'],
     });
 
     if (!!data.email) {

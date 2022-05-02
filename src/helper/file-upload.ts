@@ -25,8 +25,7 @@ const s3_upload = async (file, name, mimetype) => {
     },
   };
   try {
-    const s3Response = await s3.upload(params).promise();
-    return s3Response;
+    return await s3.upload(params).promise();
   } catch (e) {
     console.log(e);
   }
