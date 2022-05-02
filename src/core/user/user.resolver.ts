@@ -1,15 +1,28 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { TUsers } from './types/users.type';
 import { UserSearchDto, UsersSearchDto } from './types/search.type';
-import { BadRequestException, UseGuards } from '@nestjs/common';
+import {BadRequestException, Inject, UseGuards} from '@nestjs/common';
 import { FollowDto, TFollow } from './types/follow.type';
 import { CurrentUser, GqlAuthGuard } from '../../api/auth/guards/graphql.guard';
+import { PostService } from '../post/post.service';
+import {PostEntity} from "../post/post.entity";
 
 @Resolver(() => UserEntity)
 export class UserResolver {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private postService: PostService,
+  ) {}
 
   @Mutation(() => [UserEntity])
   @UseGuards(GqlAuthGuard)
@@ -26,7 +39,8 @@ export class UserResolver {
     return this.userService.getUsersService(search);
   }
 
-  @Mutation(() => UserEntity)
+
+  @Query(() => UserEntity)
   @UseGuards(GqlAuthGuard)
   async user(@Args('search') id: UserSearchDto): Promise<UserEntity> {
     return this.userService.getUserByAttrService(id);
@@ -43,5 +57,11 @@ export class UserResolver {
       throw new BadRequestException('no exist follower');
     }
     return this.userService.followService(user, flr, follower.following);
+  }
+
+  @ResolveField('posts', () => [PostEntity])
+  @UseGuards(GqlAuthGuard)
+  async posts(@Parent() user: UserEntity) {
+    return this.postService.getUserPosts(user);
   }
 }

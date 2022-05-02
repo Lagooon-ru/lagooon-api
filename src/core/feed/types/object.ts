@@ -22,5 +22,9 @@ class TFeedAddComment {
   @Field()
   status: boolean;
 }
-
-export { TFeeds, TFeedLike, TFeedAddComment };
+@ObjectType()
+class TDelete {
+  @Field()
+  status: boolean;
+}
+export { TFeeds, TFeedLike, TFeedAddComment, TDelete };

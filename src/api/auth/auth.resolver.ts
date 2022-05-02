@@ -33,17 +33,11 @@ export class AuthResolver {
     let user = await this.authService.validateUserService({
       email: signupData.email,
     });
-    if (!user) {
-      user = await this.authService.validateUserService({
-        username: signupData.username,
-      });
-      if (!user) {
-        const re = await this.authService.signupService(signupData);
-        res.cookie('token', re.access_token);
-        return re;
-      }
 
-      throw new BadRequestException('The username is already exist');
+    if (!user) {
+      const re = await this.authService.signupService(signupData);
+      res.cookie('token', re.access_token);
+      return re;
     }
 
     throw new BadRequestException('This email address is already exist');

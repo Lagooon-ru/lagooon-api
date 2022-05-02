@@ -54,7 +54,7 @@ type UserEntity {
   updatedAt: DateTime!
   role: String!
   name: String
-  username: String!
+  username: String
   bio: String
   email: String!
   emailConfirmed: Boolean!
@@ -64,6 +64,7 @@ type UserEntity {
   avatar: MediaEntity
   follow: [UserEntity!]
   chats: [ChatEntity!]
+  posts: [PostEntity!]!
 }
 
 type TPagination {
@@ -81,9 +82,48 @@ type TFollow {
   status: Boolean
 }
 
+type PostEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: UserEntity!
+  title: String!
+  description: String!
+  type: String!
+  photoIds: [String!]!
+  likes: [UserEntity!]!
+  score: Float
+  size: String!
+  comments: [PostCommentEntity!]!
+  photos: [MediaEntity!]!
+}
+
+type PostCommentEntity {
+  id: String!
+  isActive: Boolean!
+  isArchived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: UserEntity!
+  parent: PostCommentEntity!
+  likes: [UserEntity!]!
+  comment: String!
+}
+
 type MediasDto {
   data: [MediaEntity!]!
   pagination: TPagination!
+}
+
+type PostsDto {
+  data: [PostEntity!]!
+  pagination: TPagination!
+}
+
+type TDelete {
+  status: Boolean!
 }
 
 type TLogin {
@@ -101,40 +141,6 @@ type TForget {
 
 type TEmailConfirm {
   status: Boolean!
-}
-
-type PostEntity {
-  id: String!
-  isActive: Boolean!
-  isArchived: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  author: UserEntity!
-  title: String!
-  description: String!
-  type: String!
-  photos: [MediaEntity!]!
-  likes: [UserEntity!]!
-  score: Float!
-  size: String!
-  comments: [PostCommentEntity!]!
-}
-
-type PostCommentEntity {
-  id: String!
-  isActive: Boolean!
-  isArchived: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  author: UserEntity!
-  parent: PostCommentEntity!
-  likes: [UserEntity!]!
-  comment: String!
-}
-
-type PostsDto {
-  data: [PostEntity!]!
-  pagination: TPagination!
 }
 
 type StoryEntity {
@@ -262,19 +268,27 @@ type TildaEntity {
 type Query {
   versions: [AppEntity!]!
   info(arg: VersionDto!): TVersion!
+  user(search: UserSearchDto!): UserEntity!
   medias: MediasDto!
-  profile: UserEntity!
   posts(search: PostsSearchDto!): PostsDto!
+  profile: UserEntity!
+  stories(arg: StoriesDto!): TStories!
   story(arg: StoryDto!): StoryEntity!
   storyOfMe: [StoryEntity!]!
   storyGetComments(arg: StoryGetCommentsDto!): [StoryCommentEntity!]!
   chats: [ChatEntity!]!
+  getFeeds(params: PaginationDto!): [PostEntity!]!
+  getOwnFeeds(params: PaginationDto!): [FeedEntity!]!
   tildaPages: [TildaEntity!]!
   tildaPage(arg: TildaPageDto!): TildaEntity!
 }
 
 input VersionDto {
   version: String!
+}
+
+input UserSearchDto {
+  id: String!
 }
 
 input PostsSearchDto {
@@ -288,7 +302,17 @@ input PaginationDto {
   page: Float
 }
 
+input StoriesDto {
+  pagination: PaginationDto
+  sort: String
+  keyword: String
+}
+
 input StoryDto {
+  id: String!
+}
+
+input StoryGetCommentsDto {
   id: String!
 }
 
@@ -304,10 +328,11 @@ type Mutation {
   release(arg: ReleaseDto!): TVersion!
   allUsers: [UserEntity!]!
   users(search: UsersSearchDto!): TUsers!
-  user(search: UserSearchDto!): UserEntity!
   follow(follow: FollowDto!): TFollow!
   upload(file: Upload!): MediaEntity!
-  saveVideo(file: Upload!): MediaEntity!
+  createPost(post: PostDto!): PostEntity!
+  updatePost(postId: String!, input: UpdatePostDto!): PostEntity!
+  deletePost(postId: String!): TDelete!
   signup(arg: RegisterDto!): TLogin!
   emailConfirm(email: String!): TForget!
   emailConfirmAction(arg: EmailConformActionDto!): TEmailConfirm!
@@ -345,10 +370,6 @@ input UsersSearchDto {
   keyword: String
 }
 
-input UserSearchDto {
-  id: String!
-}
-
 input FollowDto {
   follower: String!
   following: Boolean!
@@ -357,11 +378,22 @@ input FollowDto {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
+input PostDto {
+  title: String!
+  description: String
+  photos: [String!]!
+}
+
+input UpdatePostDto {
+  title: String
+  description: String
+}
+
 input RegisterDto {
   name: String
   bio: String
   avatar: String
-  username: String!
+  username: String
   email: String!
   password: String!
 }
@@ -389,6 +421,7 @@ input ProfileDto {
   password: String
   avatar: String
 }
+
 
 input PostDto {
   title: String!

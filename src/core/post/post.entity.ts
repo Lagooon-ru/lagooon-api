@@ -5,6 +5,7 @@ import {
   OneToMany,
   ManyToOne,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from '../../helper/base.entity';
@@ -15,35 +16,40 @@ import { UserEntity } from '../user/user.entity';
 @Entity({ name: 'posts' })
 class PostEntity extends BaseEntity {
   @Field(() => UserEntity)
-  @OneToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinTable()
   author: UserEntity;
 
   @Field()
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   title: string;
 
   @Field()
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   description: string;
 
   @Field()
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   type: string;
 
-  @Field(() => [MediaEntity])
-  @OneToMany(() => MediaEntity, (photo) => photo.id)
-  photos: MediaEntity[];
+  @Field(() => [String])
+  @Column('text', { array: true })
+  photoIds: string[];
+
+  // @Field(() => [MediaEntity])
+  // @OneToMany(() => MediaEntity, (photo) => photo.id)
+  // photos: MediaEntity[];
 
   @Field(() => [UserEntity])
   @ManyToMany(() => UserEntity, (user) => user.id)
   likes: UserEntity[];
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ default: 0 })
   score: number;
 
   @Field()
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   size: string;
 
   @Field(() => [PostCommentEntity])

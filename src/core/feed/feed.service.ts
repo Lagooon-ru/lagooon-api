@@ -16,12 +16,14 @@ import {
   FeedsSearchDto,
 } from './types/input';
 import { UserService } from '../user/user.service';
+import { PaginationDto } from 'src/helper/pagination.dto';
+import { FeedRepository } from './feed.repository';
+
 
 @Injectable()
 export class FeedService {
   constructor(
-    @InjectRepository(FeedEntity)
-    private feedRepository: Repository<FeedEntity>,
+    private feedRepository: FeedRepository,
     @InjectRepository(FeedCommentEntity)
     private feedCommentRepository: Repository<FeedCommentEntity>,
     private readonly mediaService: MediaService,
@@ -190,5 +192,16 @@ export class FeedService {
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async getOwn(
+    params: PaginationDto,
+    author: UserEntity,
+  ): Promise<FeedEntity[]> {
+    return await this.feedRepository.getOwn(params, author);
+  }
+
+  async getAll(params: PaginationDto): Promise<FeedEntity[]> {
+    return await this.feedRepository.getAll(params);
   }
 }

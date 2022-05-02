@@ -7,32 +7,34 @@ import {
   Req,
   BadRequestException,
   Response,
+  UploadedFiles,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/api/auth/guards/jwt.guard';
 import { MediaService } from './media.service';
+import { MediaPipe } from './pipes/media.pipe';
 
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
-  @Post('upload/video')
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
-  async save(
-    @UploadedFile() file: Express.Multer.File,
-    @Req() req: any,
-  ): Promise<any> {
-    return this.mediaService.uploadVideo(file, req.user);
-  }
-
   @Post('upload')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('media'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
-    if (!file) {
-      throw new BadRequestException('no file');
-    }
-    return this.mediaService.uploadService(file, req.user);
+  @UseInterceptors(FilesInterceptor('files'))
+  async uploadFiles(
+    @UploadedFiles(MediaPipe) files: Array<Express.Multer.File>,
+    @Req() req,
+  ): Promise<any> {
+    return this.mediaService.uploadVideo(files, req.user);
   }
+
+  // @Post('upload')
+  // @UseGuards(JwtAuthGuard)
+  // @UseInterceptors(FileInterceptor('media'))
+  // async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
+  //   if (!file) {
+  //     throw new BadRequestException('no file');
+  //   }
+  //   return this.mediaService.uploadService(file, req.user);
+  // }
 }

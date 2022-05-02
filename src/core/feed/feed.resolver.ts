@@ -12,10 +12,16 @@ import {
   FeedLikeDto,
   FeedsSearchDto,
 } from './types/input';
+import { PaginationDto } from 'src/helper/pagination.dto';
+import {PostService} from "../post/post.service";
+import {PostEntity} from "../post/post.entity";
 
 @Resolver()
 export class FeedResolver {
-  constructor(private feedService: FeedService) {}
+  constructor(
+      private feedService: FeedService,
+      private postService: PostService,
+  ) {}
 
   @Mutation(() => TFeeds)
   @UseGuards(GqlAuthGuard)
@@ -24,6 +30,25 @@ export class FeedResolver {
     @CurrentUser() user: UserEntity,
   ) {
     return this.feedService.getFeedsService(search, user);
+  }
+
+  @Query(() => [PostEntity])
+  @UseGuards(GqlAuthGuard)
+  async getFeeds(@Args('params') params: PaginationDto) {
+    return this.postService.getPosts({
+      pagination: params,
+      sort: 'createdAt',
+      keyword: null,
+    });
+  }
+
+  @Query(() => [FeedEntity])
+  @UseGuards(GqlAuthGuard)
+  async getOwnFeeds(
+    @Args('params') params: PaginationDto,
+    @CurrentUser() author: UserEntity,
+  ) {
+    return await this.feedService.getOwn(params, author);
   }
 
   @Mutation(() => FeedEntity)

@@ -4,6 +4,7 @@ import {
   IsString,
   MaxLength,
   MinLength,
+  IsOptional,
 } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 
@@ -18,11 +19,11 @@ export class RegisterDto {
   @Field({ nullable: true })
   avatar: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(5)
   @MaxLength(30)
-  @Field({ nullable: false })
+  @Field({ nullable: true })
   username: string;
 
   @IsNotEmpty()

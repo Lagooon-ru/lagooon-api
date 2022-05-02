@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {In, Repository} from 'typeorm';
 import { MediaEntity } from './media.entity';
 import { MediasDto } from './types/medias.type';
 import { MediasSearchDto } from './types/search.type';
@@ -45,9 +45,20 @@ export class MediaService {
     return this.mediaRepository.save(newMedia);
   }
 
-  async uploadVideo(file: any, user: UserEntity): Promise<MediaEntity> {
-    const url = await uploadFile(file);
-    return await this.mediaRepository.save({ path: url, author: user });
+  async uploadVideo(files: any, user: UserEntity): Promise<MediaEntity[]> {
+    const result: MediaEntity[] = [];
+
+    for (const file of files) {
+      const url = await uploadFile(file);
+      const fileUpload = await this.mediaRepository.save({
+        path: url,
+        author: user,
+        size: file.size,
+        format: file.mimetype,
+      });
+      result.push(fileUpload);
+    }
+    return result;
   }
 
   async getMedias(search: MediasSearchDto): Promise<MediasDto> {
@@ -62,6 +73,10 @@ export class MediaService {
 
   async getById(id: string): Promise<MediaEntity> {
     return this.mediaRepository.findOne(id);
+  }
+
+  getByIds(ids: string[]): Promise<MediaEntity[]> {
+    return this.mediaRepository.find({ id: In(ids) });
   }
 
   async checkPron(file: any) {

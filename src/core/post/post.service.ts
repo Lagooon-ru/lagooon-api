@@ -7,6 +7,7 @@ import { PostsDto } from './types/posts.type';
 import { UserEntity } from '../user/user.entity';
 import { MediaService } from '../media/media.service';
 import { PostDto } from './types/create.type';
+import { UpdatePostDto } from './types/update.type';
 
 @Injectable()
 export class PostService {
@@ -45,7 +46,13 @@ export class PostService {
     };
   }
 
-  async createPost(post: PostDto): Promise<PostEntity> {
+  getUserPosts(author: UserEntity) {
+    return this.postRepository.find({
+      where: { author },
+    });
+  }
+
+  async createPost(post: PostDto, author: UserEntity): Promise<PostEntity> {
     const { title, description, photos } = post;
 
     if (photos.length === 0) {
@@ -62,11 +69,30 @@ export class PostService {
 
       newPost.title = title;
       newPost.description = description;
-      newPost.photos = pIds;
-
+      // newPost.photos = pIds;
+      newPost.author = author;
+      newPost.photoIds = photos;
       await this.postRepository.save(newPost);
       // await this.searchService.indexUser(newUser);
       return newPost;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async update(id: string, post: UpdatePostDto): Promise<PostEntity> {
+    try {
+      await this.postRepository.update(id, { ...post });
+      return await this.postRepository.findOne(id);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async delete(id: string): Promise<any> {
+    try {
+      await this.postRepository.delete(id);
+      return { status: true };
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
