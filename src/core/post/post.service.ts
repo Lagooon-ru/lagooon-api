@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, ILike, Like, Repository } from 'typeorm';
 import { PostEntity } from './post.entity';
 import { PostsSearchDto } from './types/search.type';
 import { PostsDto } from './types/posts.type';
@@ -23,8 +23,8 @@ export class PostService {
     const keyword = search.keyword || '';
     const where: FindManyOptions<UserEntity>['where'] = [];
     if (!!keyword) {
-      where.push({ title: Like(`%${keyword}%`) });
-      where.push({ description: Like(`%${keyword}%`) });
+      where.push({ title: ILike(`%${keyword}%`) });
+      where.push({ description: ILike(`%${keyword}%`) });
     }
 
     const [item, count] = await this.postRepository.findAndCount({

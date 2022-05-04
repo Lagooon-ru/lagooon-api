@@ -17,7 +17,8 @@ import {
 import { TStories, TStoryLike } from './types/object.type';
 import { UserEntity } from '../user/user.entity';
 import { MediaService } from '../media/media.service';
-import { MediaEntity } from '../media/media.entity';
+import { FeedService } from '../feed/feed.service';
+import { FeedEntity } from '../feed/feed.entity';
 
 @Injectable()
 export class StoryService {
@@ -27,6 +28,7 @@ export class StoryService {
     @InjectRepository(StoryCommentEntity)
     private storyCommentRepository: Repository<StoryCommentEntity>,
     private mediaService: MediaService,
+    private feedService: FeedService,
   ) {}
 
   async getStoriesService(search: StoriesDto): Promise<TStories> {
@@ -72,8 +74,8 @@ export class StoryService {
     });
   }
 
-  async getUserStoriesService(user: UserEntity): Promise<StoryEntity[]> {
-    return this.storyRepository.find({ author: user });
+  async getUserStoriesService(user: UserEntity): Promise<FeedEntity[]> {
+    return this.feedService.getUserStoryService(user);
   }
 
   async createStoryService(
@@ -85,7 +87,6 @@ export class StoryService {
     if (!p) {
       throw new HttpException('Add a media at least', HttpStatus.BAD_REQUEST);
     }
-
     try {
       const newStory = await this.storyRepository.create();
 

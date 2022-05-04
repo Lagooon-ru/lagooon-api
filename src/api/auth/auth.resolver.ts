@@ -30,7 +30,7 @@ export class AuthResolver {
 
   @Mutation(() => TLogin)
   async signup(@GRes() res: any, @Args('arg') signupData: RegisterDto) {
-    let user = await this.authService.validateUserService({
+    const user = await this.authService.validateUserService({
       email: signupData.email,
     });
 
@@ -113,5 +113,11 @@ export class AuthResolver {
     @CurrentUser() user: UserEntity,
   ) {
     return this.authService.updateProfile(user, data);
+  }
+
+  @Mutation(() => TLogin)
+  @UseGuards(GqlAuthGuard)
+  async profileRetrieve(@CurrentUser() user: UserEntity) {
+    return this.authService.retrieveProfile(user);
   }
 }

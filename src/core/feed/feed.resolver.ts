@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { FeedService } from './feed.service';
 import { FeedCommentEntity, FeedEntity } from './feed.entity';
 import { BadRequestException, UseGuards } from '@nestjs/common';
@@ -13,14 +13,14 @@ import {
   FeedsSearchDto,
 } from './types/input';
 import { PaginationDto } from 'src/helper/pagination.dto';
-import {PostService} from "../post/post.service";
-import {PostEntity} from "../post/post.entity";
+import { PostService } from '../post/post.service';
+import { PostEntity } from '../post/post.entity';
 
 @Resolver()
 export class FeedResolver {
   constructor(
-      private feedService: FeedService,
-      private postService: PostService,
+    private feedService: FeedService,
+    private postService: PostService,
   ) {}
 
   @Mutation(() => TFeeds)

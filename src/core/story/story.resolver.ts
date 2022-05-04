@@ -16,6 +16,7 @@ import {
 } from './types/input.type';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
+import { FeedEntity } from '../feed/feed.entity';
 
 @Resolver()
 export class StoryResolver {
@@ -25,11 +26,13 @@ export class StoryResolver {
   ) {}
 
   @Mutation(() => TStories)
+  @UseGuards(GqlAuthGuard)
   async stories(@Args('arg') search: StoriesDto): Promise<TStories> {
     return this.storyService.getStoriesService(search);
   }
 
   @Query(() => StoryEntity)
+  @UseGuards(GqlAuthGuard)
   async story(@Args('arg') story: StoryDto): Promise<StoryEntity> {
     return this.storyService.getStoryService(story);
   }
@@ -40,14 +43,15 @@ export class StoryResolver {
     return this.storyService.getMyStoryService(user);
   }
 
-  @Mutation(() => [StoryEntity])
-  async storyOfUser(
-    @Args('arg') req: StoriesOfUserDto,
-  ): Promise<StoryEntity[]> {
+  @Mutation(() => [FeedEntity])
+  @UseGuards(GqlAuthGuard)
+  async storyOfUser(@Args('arg') req: StoriesOfUserDto): Promise<FeedEntity[]> {
     const user = await this.userService.getUserByAttrService({ id: req.id });
+
     if (!user) {
       throw new BadRequestException('no registered user with this id');
     }
+
     return this.storyService.getUserStoriesService(user);
   }
 
@@ -61,6 +65,7 @@ export class StoryResolver {
   }
 
   @Mutation(() => StoryEntity)
+  @UseGuards(GqlAuthGuard)
   async storyUpdate(
     @Args('arg') update: StoryUpdateDto,
     @CurrentUser() user: UserEntity,
@@ -102,6 +107,7 @@ export class StoryResolver {
   }
 
   @Query(() => [StoryCommentEntity])
+  @UseGuards(GqlAuthGuard)
   async storyGetComments(@Args('arg') story: StoryGetCommentsDto) {
     return this.storyService.getCommentsService(story);
   }

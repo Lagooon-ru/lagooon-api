@@ -11,11 +11,11 @@ import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { TUsers } from './types/users.type';
 import { UserSearchDto, UsersSearchDto } from './types/search.type';
-import {BadRequestException, Inject, UseGuards} from '@nestjs/common';
+import { BadRequestException, Inject, UseGuards } from '@nestjs/common';
 import { FollowDto, TFollow } from './types/follow.type';
 import { CurrentUser, GqlAuthGuard } from '../../api/auth/guards/graphql.guard';
 import { PostService } from '../post/post.service';
-import {PostEntity} from "../post/post.entity";
+import { PostEntity } from '../post/post.entity';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
@@ -39,8 +39,7 @@ export class UserResolver {
     return this.userService.getUsersService(search);
   }
 
-
-  @Query(() => UserEntity)
+  @Mutation(() => UserEntity)
   @UseGuards(GqlAuthGuard)
   async user(@Args('search') id: UserSearchDto): Promise<UserEntity> {
     return this.userService.getUserByAttrService(id);

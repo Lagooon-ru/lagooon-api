@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {In, Repository} from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { MediaEntity } from './media.entity';
 import { MediasDto } from './types/medias.type';
 import { MediasSearchDto } from './types/search.type';
@@ -20,6 +20,7 @@ export class MediaService {
   ) {}
 
   async uploadService(file, user: UserEntity): Promise<MediaEntity> {
+    console.log(file);
     if (file.mimetype.includes('image')) {
       const { isForbidden } = await this.checkPron(file);
       if (isForbidden) {

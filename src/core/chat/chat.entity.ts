@@ -1,7 +1,15 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../helper/base.entity';
 import { UserEntity } from '../user/user.entity';
+import { FeedCommentEntity } from '../feed/feed.entity';
 
 export enum ChatFormat {
   DIRECT = 'direct',
@@ -9,39 +17,48 @@ export enum ChatFormat {
 }
 
 @ObjectType()
-@Entity({ name: 'chat' })
+@Entity({ name: 'chats' })
 class ChatEntity extends BaseEntity {
   @Field()
   @Column({ type: 'enum', enum: ChatFormat, default: ChatFormat.DIRECT })
   type: ChatFormat;
 
-  @Field()
-  @Column({ type: 'varchar', length: '255', nullable: false })
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: '255', nullable: true })
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: '255', nullable: true })
   description: string;
 
   @Field(() => [UserEntity])
-  @ManyToMany(() => UserEntity, (member) => member.chats)
+  @ManyToMany(() => UserEntity, (member) => member.id)
   @JoinTable()
   members: UserEntity[];
 
-  @Field(() => [MessageEntity])
-  @Column('jsonb', { nullable: true })
-  content: MessageEntity[];
+  @Field(() => [MessageEntity], { nullable: true })
+  @OneToMany(() => MessageEntity, (message) => message.chat, {
+    nullable: true,
+  })
+  @JoinTable()
+  messages: FeedCommentEntity[];
 }
 
 @ObjectType()
 @Entity({ name: 'chat' })
 class MessageEntity extends BaseEntity {
+  @Field(() => ChatEntity)
+  @ManyToOne(() => ChatEntity, (chat) => chat.id)
+  chat: ChatEntity;
+
   @Field(() => UserEntity)
-  @OneToMany(() => UserEntity, (member) => member.id)
+  @ManyToOne(() => UserEntity, (member) => member.id)
+  @JoinTable()
   sender: UserEntity;
 
   @Field()
+  @Column({ type: 'text' })
   message: string;
 }
 
-export { ChatEntity };
+export { ChatEntity, MessageEntity };

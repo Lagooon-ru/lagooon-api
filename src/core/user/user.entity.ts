@@ -72,11 +72,6 @@ class UserEntity extends BaseEntity {
   @JoinTable()
   follow: UserEntity[];
 
-  @Field(() => [ChatEntity], { nullable: true })
-  @ManyToMany(() => ChatEntity, (member) => member.members, { nullable: true })
-  @JoinTable()
-  chats: ChatEntity[];
-
   @Column({ type: 'varchar', length: 255, nullable: true })
   vToken: string;
 

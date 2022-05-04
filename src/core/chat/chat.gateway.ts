@@ -7,8 +7,13 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import 'dotenv/config';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/api/auth/guards/jwt.guard';
 
-@WebSocketGateway(8081, { transports: ['websocket'] })
+@WebSocketGateway(8001, {
+  transports: ['websocket'],
+})
 export class ChatGateway {
   private readonly users: any[];
   constructor(private readonly chatService: ChatService) {
@@ -19,13 +24,14 @@ export class ChatGateway {
   server;
 
   @SubscribeMessage('connected')
-  handleConnect(client: any): void {
-    console.log(client);
+  handleConnect(client: Socket, id: string): void {
+    console.log(id);
+    console.log(client.id);
   }
 
   @SubscribeMessage('disconnect')
   handleDisconnect(client: any): void {
-    console.log(client);
+    console.log(client.id, 'DISCONNECTED');
   }
 
   @SubscribeMessage('update-users')
@@ -34,12 +40,10 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('message')
-  handleMessage(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() message: any,
-  ): void {
-    console.log(client);
-    console.log(message);
+  async handleMessage(client: Socket, message: any) {
+    const msg = await this.chatService.createMessageService(message);
+    console.log(msg);
+    this.server.emit('message', msg);
   }
 
   @SubscribeMessage('joinRoom')

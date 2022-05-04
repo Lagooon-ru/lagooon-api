@@ -20,3 +20,9 @@ export class CreateChatDto {
   @Field()
   description: string;
 }
+
+@InputType()
+export class GetChatDto {
+  @Field(() => String)
+  receiverId: string;
+}

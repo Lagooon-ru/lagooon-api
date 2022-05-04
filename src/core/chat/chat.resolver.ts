@@ -1,14 +1,18 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ChatEntity } from './chat.entity';
 import { ChatService } from './chat.service';
-import { UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { CurrentUser, GqlAuthGuard } from '../../api/auth/guards/graphql.guard';
 import { UserEntity } from '../user/user.entity';
-import { CreateChatDto } from './types/create.type';
+import { CreateChatDto, GetChatDto } from './types/create.type';
+import { UserService } from '../user/user.service';
 
 @Resolver()
 export class ChatResolver {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly userService: UserService,
+  ) {}
 
   @Query(() => [ChatEntity])
   @UseGuards(GqlAuthGuard)
@@ -23,5 +27,19 @@ export class ChatResolver {
     @Args('arg') arg: CreateChatDto,
   ) {
     return this.chatService.createChatService(user, arg);
+  }
+
+  @Mutation(() => ChatEntity)
+  @UseGuards(GqlAuthGuard)
+  async getChat(@CurrentUser() user: UserEntity, @Args('arg') arg: GetChatDto) {
+    const receiver = await this.userService.getUserByAttrService({
+      id: arg.receiverId,
+    });
+
+    if (!receiver) {
+      throw new BadRequestException('No User');
+    }
+
+    return this.chatService.getChatService(user, receiver);
   }
 }

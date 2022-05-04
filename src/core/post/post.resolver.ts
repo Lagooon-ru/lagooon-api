@@ -1,4 +1,11 @@
-import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { PostEntity } from './post.entity';
 import { PostService } from './post.service';
 import { PostDto } from './types/create.type';

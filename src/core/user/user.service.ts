@@ -34,8 +34,6 @@ export class UserService {
       where.push({ email: ILike(`%${keyword}%`) });
     }
 
-    console.log(where);
-
     const [item, count] = await this.userRepository.findAndCount({
       where,
       relations: ['follow', 'avatar', 'follow.avatar'],
@@ -147,6 +145,7 @@ export class UserService {
         follower.follow = [user];
       }
     } else {
+      follower.follow = follower.follow.filter((i) => i.id !== user.id);
     }
 
     await this.userRepository.save(follower);

@@ -3,7 +3,7 @@ import { FeedService } from './feed.service';
 import { FeedResolver } from './feed.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MediaModule } from '../media/media.module';
-import { FeedCommentEntity, FeedEntity } from './feed.entity';
+import { FeedCommentEntity } from './feed.entity';
 import { UserModule } from '../user/user.module';
 import { FeedRepository } from './feed.repository';
 import { PostModule } from '../post/post.module';
@@ -17,5 +17,6 @@ import { PostModule } from '../post/post.module';
     PostModule,
   ],
   providers: [FeedService, FeedResolver],
+  exports: [FeedService],
 })
 export class FeedModule {}

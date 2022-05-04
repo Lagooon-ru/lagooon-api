@@ -19,7 +19,6 @@ import { UserService } from '../user/user.service';
 import { PaginationDto } from 'src/helper/pagination.dto';
 import { FeedRepository } from './feed.repository';
 
-
 @Injectable()
 export class FeedService {
   constructor(
@@ -36,7 +35,7 @@ export class FeedService {
     user: UserEntity,
   ): Promise<TFeeds> {
     const allUsers = await this.userService.getAllUserService();
-    const followers = [];
+    let followers = [];
     allUsers.map((i) => {
       if (i.follow.filter((j) => j.id === user.id).length > 0) {
         followers.push(i);
@@ -46,11 +45,17 @@ export class FeedService {
     const page = search.pagination?.page || 0;
     const keyword = search.keyword || '';
     const author = search.author || '';
-    const where: FindManyOptions<UserEntity>['where'] = [];
+
+    const where: FindManyOptions<FeedEntity>['where'] = [];
     if (!!keyword) {
-      where.push({ caption: Like(`%${keyword}%`) });
+      // where.push({ caption: ILike(`%${keyword}%`) });
+      followers = followers.filter(
+        (u) =>
+          u.name.includes(keyword) ||
+          u.username.includes(keyword) ||
+          u.email.includes(keyword),
+      );
     }
-    console.log(followers.length);
 
     if (!!author) {
       const au = await this.userService.getUserByAttrService({ id: author });
@@ -80,6 +85,16 @@ export class FeedService {
         total: count,
       },
     };
+  }
+
+  //STORY IN 24H
+  async getUserStoryService(user: UserEntity): Promise<FeedEntity[]> {
+    return this.feedRepository.find({
+      where: {
+        author: user,
+      },
+      relations: ['likes', 'author', 'photos', 'comments'],
+    });
   }
 
   //CREATE

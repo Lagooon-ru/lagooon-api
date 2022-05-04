@@ -82,6 +82,22 @@ export class AuthService {
     return this.userService.updateUserService(user.id, data);
   }
 
+  async retrieveProfile(user: UserEntity): Promise<TLogin> {
+    const u = await this.userService.getUserByAttrService({ id: user.id });
+    const payload = {
+      email: u.email,
+      sub: u.password,
+    };
+
+    return {
+      user: {
+        ...u,
+        password: undefined,
+      },
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
   //Login Service
   async loginService(user: UserEntity): Promise<TLogin> {
     const payload = {
