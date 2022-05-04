@@ -1,15 +1,44 @@
-import { Entity, Column, OneToMany, ManyToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToMany,
+  JoinTable,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { BaseEntity } from '../../helper/base.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MediaEntity } from '../media/media.entity';
 import { ChatEntity } from '../chat/chat.entity';
 
+export enum RoleFormat {
+  CONSUMER = 'cu',
+  VIP = 'vip',
+  COMPANY = 'cp',
+  GROUP = 'gp',
+  ADMIN = 'ad',
+  SUPERUSER = 'su',
+  SUPPORT = 'sp',
+}
+
 @ObjectType()
 @Entity({ name: 'user' })
 class UserEntity extends BaseEntity {
   @Field()
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'enum', enum: RoleFormat, default: RoleFormat.CONSUMER })
+  role: RoleFormat;
+
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 63, nullable: true })
   name: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 63, unique: true, nullable: true })
+  username: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 127, nullable: true })
+  bio: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
@@ -19,7 +48,7 @@ class UserEntity extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   emailConfirmed: boolean;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
   phone: string;
 
@@ -34,22 +63,20 @@ class UserEntity extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   isVerified: boolean;
 
-  @Field(() => [MediaEntity])
-  @OneToMany(() => MediaEntity, (media) => media.author)
-  medias: MediaEntity[];
+  @Field(() => MediaEntity, { nullable: true })
+  @ManyToOne(() => MediaEntity, (media) => media.id)
+  avatar: MediaEntity;
 
-  @Field()
+  @Field(() => [UserEntity], { nullable: true })
+  @ManyToMany(() => UserEntity, (member) => member.id, { nullable: true })
+  @JoinTable()
+  follow: UserEntity[];
+
   @Column({ type: 'varchar', length: 255, nullable: true })
   vToken: string;
 
-  @Field()
   @Column({ type: 'varchar', length: 255, nullable: true })
   rToken: string;
-
-  @Field(() => [ChatEntity])
-  @ManyToMany(() => ChatEntity, (chat) => chat.members)
-  @JoinColumn()
-  chats: ChatEntity[];
 }
 
 export { UserEntity };

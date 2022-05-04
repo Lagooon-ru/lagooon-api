@@ -9,6 +9,8 @@ import { UserEntity } from '../../core/user/user.entity';
 import { LoginDto, TLogin } from './types/login.type';
 import { MailService } from '../../service/mail/mail.service';
 import { createToken } from '../../helper/token.helper';
+import { ProfileDto } from './types/profile.type';
+import { MediaService } from '../../core/media/media.service';
 
 @Injectable()
 export class AuthService {
@@ -16,16 +18,21 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
+    private readonly mediaService: MediaService,
   ) {}
 
   async getProfile(id: string): Promise<UserEntity> {
-    return this.userService.getUserByAttrService({ id: id });
+    return this.userService.getProfileService(id);
   }
 
   //Signup Service
   async signupService(dat: any): Promise<TLogin> {
     const pwd = encryptString(dat.password);
     const token = createToken();
+
+    if (!!dat.avatar) {
+      dat.avatar = await this.mediaService.getById(dat.avatar);
+    }
 
     const user: UserEntity = await this.userService.createUserService({
       ...dat,
@@ -49,15 +56,15 @@ export class AuthService {
     return this.mailService
       .sendUserConfirmationMail(user, newToken)
       .then(() => {
-        return { status: 'true' };
+        return { status: true };
       })
       .catch((e) => {
         console.log(e);
-        return { status: 'false' };
+        return { status: false };
       });
   }
 
-  async emailConfirmService(token: string): Promise<boolean> {
+  async emailConfirmService(token: string): Promise<UserEntity | boolean> {
     const user = await this.userService.getUserByAttrService({ vToken: token });
     if (!user) {
       return false;
@@ -68,6 +75,27 @@ export class AuthService {
       vToken: newToken,
       emailConfirmed: true,
     });
+  }
+
+  //Profile Service
+  async updateProfile(user: UserEntity, data: ProfileDto): Promise<UserEntity> {
+    return this.userService.updateUserService(user.id, data);
+  }
+
+  async retrieveProfile(user: UserEntity): Promise<TLogin> {
+    const u = await this.userService.getUserByAttrService({ id: user.id });
+    const payload = {
+      email: u.email,
+      sub: u.password,
+    };
+
+    return {
+      user: {
+        ...u,
+        password: undefined,
+      },
+      access_token: this.jwtService.sign(payload),
+    };
   }
 
   //Login Service
@@ -98,11 +126,11 @@ export class AuthService {
     return this.mailService
       .sendForgetPasswordMail(user, token)
       .then(() => {
-        return { status: 'true' };
+        return { status: true };
       })
       .catch((e) => {
         console.log(e);
-        return { status: 'false' };
+        return { status: false };
       });
   }
 
@@ -138,14 +166,19 @@ export class AuthService {
 
   //initial validation for the local passport
   async validate(dat: LoginDto): Promise<any> {
-    const user = await this.userService.getUserByAttrService({
-      email: dat.email,
+    let u = await this.userService.getUserByAttrService({
+      email: dat.user,
     });
-    if (!user) {
-      return null;
+    if (!u) {
+      u = await this.userService.getUserByAttrService({
+        username: dat.user,
+      });
+      if (!u) {
+        return null;
+      }
     }
-    const passwordIsValid = decryptString(dat.password, user.password);
-    return passwordIsValid ? user : null;
+    const passwordIsValid = decryptString(dat.password, u.password);
+    return passwordIsValid ? u : null;
   }
 
   async validateUserService(arg: any): Promise<UserEntity | null> {

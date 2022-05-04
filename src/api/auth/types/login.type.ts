@@ -1,13 +1,13 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { UserEntity } from '../../../core/user/user.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 @InputType()
 export class LoginDto {
   @IsNotEmpty()
-  @IsEmail()
+  @IsString()
   @Field()
-  email: string;
+  user: string;
 
   @IsNotEmpty()
   @IsString()
@@ -25,7 +25,19 @@ export class TLogin {
 }
 
 @ObjectType()
+export class TLogout {
+  @Field()
+  status: boolean;
+}
+
+@ObjectType()
 export class TForget {
   @Field()
-  status: string;
+  status: boolean;
+}
+
+@ObjectType()
+export class TEmailConfirm {
+  @Field()
+  status: boolean;
 }

@@ -8,10 +8,12 @@ import { UserModule } from '../../core/user/user.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { MailService } from '../../service/mail/mail.service';
 import { AuthResolver } from './auth.resolver';
+import { MediaModule } from '../../core/media/media.module';
 
 @Module({
   imports: [
     UserModule,
+    MediaModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtSecret,

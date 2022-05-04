@@ -14,6 +14,13 @@ import { PostModule } from './core/post/post.module';
 import { StoryModule } from './core/story/story.module';
 import { AppController } from './app.controller';
 import { ChatModule } from './core/chat/chat.module';
+import { SearchModule } from './api/search/search.module';
+import { CloudinaryModule } from './service/cloudinary/cloudinary.module';
+import { AppResolver } from './app.resolver';
+import { AppService } from './app.service';
+import { AppEntity } from './app.entity';
+import { FeedModule } from './core/feed/feed.module';
+import { TildaModule } from './core/tilda/tilda.module';
 
 @Module({
   imports: [
@@ -33,7 +40,13 @@ import { ChatModule } from './core/chat/chat.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      context: ({ req, res }) => ({ req, res }),
+      cors: {
+        credentials: true,
+        origin: true,
+      },
     }),
+    TypeOrmModule.forFeature([AppEntity]),
     UserModule,
     AuthModule,
     MailModule,
@@ -42,8 +55,13 @@ import { ChatModule } from './core/chat/chat.module';
     PostModule,
     StoryModule,
     ChatModule,
+    CloudinaryModule,
+    SearchModule,
+    FeedModule,
+    TildaModule,
   ],
   controllers: [AppController],
+  providers: [AppResolver, AppService],
 })
 export class AppModule {
   constructor(private connection: Connection) {}

@@ -6,25 +6,37 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 @Entity({ name: 'files' })
 class MediaEntity extends BaseEntity {
-  @Field(() => UserEntity)
-  @ManyToOne(() => UserEntity, (user) => user.medias)
+  @Field(() => UserEntity, { nullable: true })
+  @ManyToOne(() => UserEntity, (user) => user.id, { nullable: true })
   author: UserEntity;
 
-  @Field()
-  @Column({ type: 'varchar', length: 255 })
-  name: string;
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  asset_id: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  public_id: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
   path: string;
 
-  @Field()
-  @Column({ type: 'varchar', length: 255 })
-  type: string;
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  format: string;
 
-  @Field()
-  @Column({ type: 'varchar', length: 255 })
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   size: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'int', nullable: true })
+  height: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'int', nullable: true })
+  width: string;
 }
 
 export { MediaEntity };
